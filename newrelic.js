@@ -1,8 +1,8 @@
-const { NR_LICENSE_KEY } = process.env;
+const { NEW_RELIC_APP_NAME, NEW_RELIC_LICENSE_KEY } = process.env;
 
 exports.config = {
-  app_name: ['node-financial-advisor'],
-  license_key: NR_LICENSE_KEY,
+  app_name: [NEW_RELIC_APP_NAME],
+  license_key: NEW_RELIC_LICENSE_KEY,
   distributed_tracing: {
     enabled: true,
   },
