@@ -1,7 +1,7 @@
 const { getCompanies } = require('../../../domain/use-cases');
 
 const getCompaniesCtl = async (req, res) => {
-  const companies = getCompanies();
+  const companies = await getCompanies();
   res.send(companies);
 };
 

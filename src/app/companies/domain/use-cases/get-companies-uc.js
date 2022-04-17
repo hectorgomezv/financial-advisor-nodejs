@@ -1,9 +1,5 @@
-const getCompanies = () => [{
-  uuid: 'foo',
-  name: 'Apple Inc.',
-}, {
-  uuid: 'foo',
-  name: 'Alphabet',
-}];
+const { companiesRepository } = require('../repositories');
+
+const getCompanies = async () => companiesRepository.find();
 
 module.exports = getCompanies;
