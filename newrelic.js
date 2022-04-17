@@ -1,15 +1,13 @@
-'use strict'
-
 const { NR_LICENSE_KEY } = process.env;
 
 exports.config = {
   app_name: ['node-financial-advisor'],
   license_key: NR_LICENSE_KEY,
   distributed_tracing: {
-    enabled: true
+    enabled: true,
   },
   logging: {
-    level: 'info'
+    level: 'info',
   },
   allow_all_headers: true,
   attributes: {
@@ -23,7 +21,7 @@ exports.config = {
       'response.headers.authorization',
       'response.headers.proxyAuthorization',
       'response.headers.setCookie*',
-      'response.headers.x*'
-    ]
-  }
-}
+      'response.headers.x*',
+    ],
+  },
+};
