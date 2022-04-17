@@ -1,19 +1,15 @@
 require('dotenv').config();
 require('newrelic');
 
-const fastify = require('fastify')({
-  logger: true,
-});
+const { logger, http } = require('./app/infrastructure');
 
 const { HTTP_SERVER_PORT } = process.env;
 
-fastify.get('/', async () => ({ hello: 'world' }));
-
 const start = async () => {
   try {
-    await fastify.listen(HTTP_SERVER_PORT);
+    await http.webServer.listen(HTTP_SERVER_PORT);
   } catch (err) {
-    fastify.log.error(err);
+    logger.error(err);
     process.exit(1);
   }
 };
