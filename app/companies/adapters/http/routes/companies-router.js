@@ -1,4 +1,4 @@
-const { getCompaniesCtl } = require('../../../interfaces/controllers/companies-controller');
+const { getCompaniesCtl } = require('../controllers/companies-controller');
 
 const BASE_URL = '/companies';
 

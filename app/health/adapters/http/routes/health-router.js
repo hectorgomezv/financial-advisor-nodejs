@@ -1,4 +1,4 @@
-const { getHealthController } = require('../../../interfaces/controllers/health');
+const { getHealthController } = require('../controllers/health-controller');
 
 const BASE_URL = '/health';
 

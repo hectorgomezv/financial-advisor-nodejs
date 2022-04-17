@@ -1,4 +1,4 @@
-const { getCompanies } = require('../../domain/use-cases/companies');
+const { getCompanies } = require('../../../domain/use-cases');
 
 const getCompaniesCtl = async (req, res) => {
   const companies = getCompanies();
