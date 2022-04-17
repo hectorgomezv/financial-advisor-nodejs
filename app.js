@@ -1,7 +1,7 @@
 require('dotenv').config();
 require('newrelic');
 
-const { logger, http } = require('./infrastructure');
+const { logger, http } = require('./src/infrastructure');
 
 const { HTTP_SERVER_PORT } = process.env;
 
