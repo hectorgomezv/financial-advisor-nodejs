@@ -1,4 +1,4 @@
-const { HealthRepository } = require('../../repositories');
+const { HealthRepository } = require('../repositories');
 
 const getHealth = () => HealthRepository.getHealth();
 

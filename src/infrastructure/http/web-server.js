@@ -1,9 +1,12 @@
 const fastify = require('fastify');
-const { healthRouter } = require('./routes');
+const healthRouter = require('../../app/health/adapters/http/routes/health-router');
+const companiesRouter = require('../../app/companies/adapters/http/routes/companies-router');
+
 const logger = require('../logger');
 
 const app = fastify({ logger });
 
+companiesRouter(app);
 healthRouter(app);
 
 const listen = (port) => {

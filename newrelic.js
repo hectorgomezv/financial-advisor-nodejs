@@ -1,7 +1,7 @@
-const { NEW_RELIC_APP_NAME, NEW_RELIC_LICENSE_KEY } = process.env;
+const { FINANCIAL_ADVISOR_NEW_RELIC_APP_NAME, NEW_RELIC_LICENSE_KEY } = process.env;
 
 exports.config = {
-  app_name: [NEW_RELIC_APP_NAME],
+  app_name: [FINANCIAL_ADVISOR_NEW_RELIC_APP_NAME],
   license_key: NEW_RELIC_LICENSE_KEY,
   distributed_tracing: {
     enabled: true,

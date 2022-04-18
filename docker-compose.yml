@@ -10,7 +10,11 @@ services:
       - FINANCIAL_ADVISOR_PROVIDER_API_TOKEN=${FINANCIAL_ADVISOR_PROVIDER_API_TOKEN}
       - NEW_RELIC_APP_NAME=${FINANCIAL_ADVISOR_NEW_RELIC_APP_NAME}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - HTTP_SERVER_PORT=${HTTP_SERVER_PORT}
+      - FINANCIAL_ADVISOR_HTTP_SERVER_PORT=${FINANCIAL_ADVISOR_HTTP_SERVER_PORT}
+    links:
+      - fa-mongo
+    depends_on:
+      - fa-mongo
   node-fa-echo-server:
     image: "hectorgomezv1/fa-echo-server:${FA_ECHO_SERVER_IMAGE_RELEASE}"
     container_name: node-fa-echo-server
@@ -19,3 +23,11 @@ services:
     environment:
       - NEW_RELIC_APP_NAME=${FA_ECHO_SERVER_NEW_RELIC_APP_NAME}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+  fa-mongo:
+    image: mongo:5-focal
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data:
