@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/.bin/nodemon --experimental-modules --es-module-specifier-resolution=node app | pino-pretty",
-    "start": "node --experimental-modules --es-module-specifier-resolution=node app",
+    "dev": "./node_modules/.bin/nodemon app | pino-pretty",
+    "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
