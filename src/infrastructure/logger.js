@@ -2,10 +2,10 @@ const Pino = require('pino');
 
 const logger = Pino({
   level: 'info',
-  timestamp: () => {
-    const date = new Date();
-
-    return `,"date_access":"${date.toISOString()}"`;
+  prettyPrint: {
+    colorize: true,
+    translateTime: 'SYS:standard',
+    ignore: 'hostname,pid',
   },
 });
 
