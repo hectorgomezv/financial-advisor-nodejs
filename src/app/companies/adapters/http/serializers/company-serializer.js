@@ -3,7 +3,6 @@ const init = (app) => {
     $id: 'companySchema',
     type: 'object',
     properties: {
-      uuid: { type: 'string' },
       symbol: { type: 'string' },
       name: { type: 'string' },
     },
