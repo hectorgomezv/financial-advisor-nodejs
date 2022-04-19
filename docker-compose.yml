@@ -1,8 +1,8 @@
 version: '3'
 services:
-  node-financial-advisor:
-    image: "hectorgomezv1/node-financial-advisor:${FINANCIAL_ADVISOR_IMAGE_RELEASE}"
-    container_name: node-financial-advisor
+  financial-advisor-nodejs:
+    image: "hectorgomezv1/financial-advisor-nodejs:${FINANCIAL_ADVISOR_IMAGE_RELEASE}"
+    container_name: financial-advisor-nodejs
     ports:
       - "5100:5100"
     environment:
@@ -17,9 +17,9 @@ services:
       - fa-mongo
     depends_on:
       - fa-mongo
-  node-fa-echo-server:
+  fa-echo-server:
     image: "hectorgomezv1/fa-echo-server:${FA_ECHO_SERVER_IMAGE_RELEASE}"
-    container_name: node-fa-echo-server
+    container_name: fa-echo-server
     ports:
       - "4000:4000"
     environment:

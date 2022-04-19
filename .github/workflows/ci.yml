@@ -15,7 +15,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: hectorgomezv1/node-financial-advisor
+          images: hectorgomezv1/financial-advisor-nodejs
 
       - name: Login to DockerHub
         uses: docker/login-action@v1

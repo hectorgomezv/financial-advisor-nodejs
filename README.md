@@ -1,4 +1,4 @@
-# node-financial-advisor
+# financial-advisor-nodejs
 Financial-advisor implementation in Node.js
 
 ### Dev startup
