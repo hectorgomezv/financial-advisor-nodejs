@@ -9,12 +9,10 @@ const init = async () => {
 
 init();
 
-const find = async () => {
-  const companies = await collection.find({}).toArray();
-
-  return companies;
-};
+const find = () => collection.find({}).toArray();
+const findByIdIn = ids => collection.find({ _id: { $in: ids } }).toArray();
 
 module.exports = {
   find,
+  findByIdIn,
 };

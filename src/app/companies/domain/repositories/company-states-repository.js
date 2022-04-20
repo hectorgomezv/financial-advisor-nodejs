@@ -25,4 +25,12 @@ const refreshCompanyState = async ({ _id: companyId, symbol }) => {
   await collection.insertOne(parseState(companyId, data));
 };
 
-module.exports = { refreshCompanyState };
+const getLastState = async companyId => collection.findOne(
+  { companyId },
+  { sort: { timestamp: -1 }, limit: 1 },
+);
+
+module.exports = {
+  getLastState,
+  refreshCompanyState,
+};

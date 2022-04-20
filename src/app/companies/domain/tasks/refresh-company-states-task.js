@@ -5,7 +5,7 @@ const ONE_HOUR_MS = 60 * 60 * 1000;
 
 const refreshCompanyStates = async () => {
   const companies = await companiesRepository.find();
-  await Promise.all(companies.map((c) => companyStatesRepository.refreshCompanyState(c)));
+  await Promise.all(companies.map(c => companyStatesRepository.refreshCompanyState(c)));
 };
 
 const run = () => {

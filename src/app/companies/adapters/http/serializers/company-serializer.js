@@ -1,4 +1,4 @@
-const init = (app) => {
+const init = app => {
   app.addSchema({
     $id: 'companySchema',
     type: 'object',
