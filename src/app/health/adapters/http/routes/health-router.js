@@ -13,7 +13,7 @@ const schema = {
   },
 };
 
-const healthRouter = (app) => {
+const healthRouter = app => {
   app.get(BASE_URL, { schema }, getHealthController);
 };
 

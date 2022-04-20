@@ -3,7 +3,7 @@ const { companySerializer } = require('../serializers');
 
 const BASE_URL = '/companies';
 
-const companiesRouter = (app) => {
+const companiesRouter = app => {
   companySerializer.init(app);
 
   app.route({

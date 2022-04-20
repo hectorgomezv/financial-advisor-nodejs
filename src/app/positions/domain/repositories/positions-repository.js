@@ -4,15 +4,17 @@ let collection;
 
 const init = async () => {
   const db = await database.getDb();
-  collection = db.collection('companies');
+  collection = db.collection('positions');
 };
 
 init();
 
-const find = () => collection.find({}).toArray();
-const findByIdIn = ids => collection.find({ _id: { $in: ids } }).toArray();
+const find = async () => {
+  const positions = await collection.find({}).toArray();
+
+  return positions;
+};
 
 module.exports = {
   find,
-  findByIdIn,
 };
