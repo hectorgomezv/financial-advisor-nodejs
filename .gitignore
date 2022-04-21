@@ -72,7 +72,6 @@ typings/
 .env
 .env.test
 docker.env
-test.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

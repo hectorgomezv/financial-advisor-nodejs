@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Run unit tests
+        run: npm ci && npm run test
+
       - name: Extract commit metadata
         id: meta
         uses: docker/metadata-action@v3
@@ -31,9 +34,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: NPM Install
-        run: npm ci
-
-      - name: Run unit tests
-        run: npm run test
