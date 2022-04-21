@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "./node_modules/.bin/nodemon app | pino-pretty",
     "start": "node app",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "repository": {
     "type": "git",
