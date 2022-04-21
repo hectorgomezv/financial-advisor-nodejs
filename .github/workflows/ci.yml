@@ -31,3 +31,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: NPM Install
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test

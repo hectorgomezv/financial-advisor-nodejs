@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "./node_modules/.bin/nodemon app | pino-pretty",
     "start": "node app",
-    "test": "jest --watch"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
