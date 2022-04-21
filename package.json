@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "./node_modules/.bin/nodemon app | pino-pretty",
     "start": "node app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,21 @@
   "devDependencies": {
     "eslint": "^8.13.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0"
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^27.5.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/load",
+      "/__tests__/config/",
+      "coverage",
+      "fixtures",
+      "/load/"
+    ],
+    "setupFiles": [
+      "./src/__tests__/config/test-setup.js"
+    ]
   }
 }
