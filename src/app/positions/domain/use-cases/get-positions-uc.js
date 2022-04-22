@@ -1,3 +1,5 @@
+const { StatusCodes } = require('http-status-codes');
+
 const { positionsRepository } = require('../repositories');
 const { companiesRepository, companyStatesRepository } = require('../../../companies/domain/repositories');
 
@@ -29,6 +31,11 @@ module.exports = async () => {
 
   const positionStates = await Promise.all(positions.map(async position => {
     const company = companies.find(c => (c._id.toString() === position.companyId.toString()));
+
+    if (!company) {
+      throw Error(StatusCodes.INTERNAL_SERVER_ERROR); // TODO: make an specific error class
+    }
+
     const companyState = await companyStatesRepository.getLastState(company._id);
 
     return calculatePositionState(position, company, companyState);
