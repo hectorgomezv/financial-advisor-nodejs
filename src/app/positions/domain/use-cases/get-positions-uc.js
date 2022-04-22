@@ -1,5 +1,4 @@
-const { StatusCodes } = require('http-status-codes');
-
+const { InvalidPositionError } = require('../errors');
 const { positionsRepository } = require('../repositories');
 const { companiesRepository, companyStatesRepository } = require('../../../companies/domain/repositories');
 
@@ -33,7 +32,7 @@ module.exports = async () => {
     const company = companies.find(c => (c._id.toString() === position.companyId.toString()));
 
     if (!company) {
-      throw Error(StatusCodes.INTERNAL_SERVER_ERROR); // TODO: make an specific error class
+      throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
     }
 
     const companyState = await companyStatesRepository.getLastState(company._id);

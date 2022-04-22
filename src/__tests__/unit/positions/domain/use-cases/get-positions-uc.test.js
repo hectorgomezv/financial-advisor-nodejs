@@ -53,4 +53,11 @@ describe('[unit tests] [get-positions-uc]', () => {
       ['deltaWeight', expect.closeTo(0.0885, 3)],
     ]);
   });
+
+  test('throws an error when a position has an invalid company associated', async () => {
+    positionsRepository.find = jest.fn(() => POSITIONS);
+    companiesRepository.findByIdIn = jest.fn(() => [COMPANIES[0]]);
+
+    await expect(getPositions()).rejects.toThrow(`Invalid company for position: ${POSITIONS[1].uuid}`);
+  });
 });
