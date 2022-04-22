@@ -10,6 +10,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
+  plugins: ['jest'],
   rules: {
     'no-underscore-dangle': ['off', 'never'],
     'arrow-parens': ['error', 'as-needed'],

@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Run unit tests
+        run: npm ci && npm run test
+
       - name: Extract commit metadata
         id: meta
         uses: docker/metadata-action@v3
