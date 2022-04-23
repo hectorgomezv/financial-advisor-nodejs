@@ -2,12 +2,12 @@ const { faker } = require('@faker-js/faker');
 const { range } = require('lodash/fp');
 const matchers = require('jest-extended');
 
-const { buildCompanyState } = require('../../../fixtures/doubles');
 const { getPositions } = require('../../../../../app/positions/domain/use-cases');
 const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
 const Position = require('../../../../../app/positions/domain/entities/position');
 const Company = require('../../../../../app/companies/domain/entities/company');
+const CompanyState = require('../../../../../app/companies/domain/entities/company-state');
 
 expect.extend(matchers);
 
@@ -22,8 +22,8 @@ const POSITIONS = [
 ];
 
 const COMPANY_STATES = [
-  buildCompanyState(COMPANIES[0]._id, 126.22),
-  buildCompanyState(COMPANIES[1]._id, 77.87),
+  new CompanyState(COMPANIES[0].uuid, 126.22, 2.34),
+  new CompanyState(COMPANIES[1].uuid, 77.87, 2.34),
 ];
 
 describe('[unit tests] [get-positions-uc]', () => {

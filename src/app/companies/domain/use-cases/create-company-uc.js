@@ -36,8 +36,8 @@ module.exports = async input => {
     throw new AlreadyExistError(`Company ${company.symbol} already exists`);
   }
 
-  const { insertedId } = await CompaniesRepository.createCompany(company);
-  await CompanyStatesRepository.refreshCompanyState({ ...company, _id: insertedId });
+  await CompaniesRepository.createCompany(company);
+  await CompanyStatesRepository.refreshCompanyState(company);
 
   return company;
 };

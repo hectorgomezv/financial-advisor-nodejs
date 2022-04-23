@@ -10,7 +10,7 @@ module.exports = async uuid => {
     throw new NotFoundError(`Company with uuid ${uuid} not found`);
   }
 
-  const positions = await PositionsRepository.findByCompanyId(company._id);
+  const positions = await PositionsRepository.findByCompanyUuid(company.uuid);
 
   if (positions.length) {
     throw new HasPositionsError(`Company ${company.name} has ${positions.length} positions associated`);

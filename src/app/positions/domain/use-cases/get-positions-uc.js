@@ -36,7 +36,7 @@ module.exports = async () => {
       throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
     }
 
-    const companyState = await CompanyStatesRepository.getLastState(company._id);
+    const companyState = await CompanyStatesRepository.getLastState(company.uuid);
 
     return calculatePositionState(position, company, companyState);
   }));
