@@ -1,5 +1,5 @@
 const { faker } = require('@faker-js/faker');
-const { range } = require('lodash');
+const { map, range } = require('lodash/fp');
 const matchers = require('jest-extended');
 
 const { buildCompany, buildCompanyState, buildPosition } = require('../../../fixtures/doubles');
@@ -9,7 +9,7 @@ const { CompaniesRepository, CompanyStatesRepository } = require('../../../../..
 
 expect.extend(matchers);
 
-const COMPANY_IDS = range(4).map(i => faker.datatype.uuid());
+const COMPANY_IDS = map(faker.datatype.uuid)(range(0)(4));
 const COMPANIES = COMPANY_IDS.map(id => buildCompany(id));
 
 const POSITIONS = [
