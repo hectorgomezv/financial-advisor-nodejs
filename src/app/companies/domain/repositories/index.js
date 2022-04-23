@@ -1,7 +1,7 @@
-const companiesRepository = require('./companies-repository');
-const companyStatesRepository = require('./company-states-repository');
+const CompaniesRepository = require('./companies-repository');
+const CompanyStatesRepository = require('./company-states-repository');
 
 module.exports = {
-  companiesRepository,
-  companyStatesRepository,
+  CompaniesRepository,
+  CompanyStatesRepository,
 };

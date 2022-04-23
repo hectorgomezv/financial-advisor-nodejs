@@ -1,5 +1,5 @@
-const AlreadyExistError = require('./already-exist-error');
+const HasPositionsError = require('./has-positions-error');
 
 module.exports = {
-  AlreadyExistError,
+  HasPositionsError,
 };

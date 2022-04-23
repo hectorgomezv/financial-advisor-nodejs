@@ -12,21 +12,21 @@ const init = async () => {
 
 init();
 
-const parseState = (companyId, data) => ({
+const parseState = (companyUuid, data) => ({
   uuid: uuidv4(),
-  companyId,
+  companyUuid,
   timestamp: Date.now(),
   price: Number(data.summaryDetail.ask.raw),
   peg: Number(data.defaultKeyStatistics.pegRatio.raw),
 });
 
-const refreshCompanyState = async ({ _id: companyId, symbol }) => {
+const refreshCompanyState = async ({ uuid: companyUuid, symbol }) => {
   const { data } = await yahooFinanceClient.getQuoteSummary(symbol);
-  await collection.insertOne(parseState(companyId, data));
+  await collection.insertOne(parseState(companyUuid, data));
 };
 
-const getLastState = async companyId => collection.findOne(
-  { companyId },
+const getLastState = async companyUuid => collection.findOne(
+  { companyUuid },
   { sort: { timestamp: -1 }, limit: 1 },
 );
 

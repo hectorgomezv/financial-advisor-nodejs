@@ -1,10 +1,11 @@
 const { InvalidPositionError } = require('../errors');
-const { positionsRepository } = require('../repositories');
-const { companiesRepository, companyStatesRepository } = require('../../../companies/domain/repositories');
+const { PositionsRepository } = require('../repositories');
+const { CompaniesRepository, CompanyStatesRepository } = require('../../../companies/domain/repositories');
 
 const calculatePositionState = (position, company, companyState) => ({
   ...position,
   companyName: company.name,
+  symbol: company.symbol,
   value: Number(companyState.price * position.shares),
 });
 
@@ -25,17 +26,17 @@ const addWeights = positionsStates => {
 };
 
 module.exports = async () => {
-  const positions = await positionsRepository.find();
-  const companies = await companiesRepository.findByIdIn(positions.map(p => p.companyId));
+  const positions = await PositionsRepository.find();
+  const companies = await CompaniesRepository.findByUuidIn(positions.map(p => p.companyUuid));
 
   const positionStates = await Promise.all(positions.map(async position => {
-    const company = companies.find(c => (c._id.toString() === position.companyId.toString()));
+    const company = companies.find(c => (c.uuid === position.companyUuid));
 
     if (!company) {
       throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
     }
 
-    const companyState = await companyStatesRepository.getLastState(company._id);
+    const companyState = await CompanyStatesRepository.getLastState(company.uuid);
 
     return calculatePositionState(position, company, companyState);
   }));

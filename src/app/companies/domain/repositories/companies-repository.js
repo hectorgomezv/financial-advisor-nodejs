@@ -9,14 +9,18 @@ const init = async () => {
 
 init();
 
-const find = () => collection.find({}).toArray();
-const findByIdIn = ids => collection.find({ _id: { $in: ids } }).toArray();
-const findBySymbol = symbol => collection.findOne({ symbol });
 const createCompany = company => collection.insertOne(company);
+const deleteById = id => collection.deleteOne({ _id: id });
+const find = () => collection.find({}).toArray();
+const findByUuidIn = uuids => collection.find({ uuid: { $in: uuids } }).toArray();
+const findBySymbol = symbol => collection.findOne({ symbol });
+const findByUuid = uuid => collection.findOne({ uuid });
 
 module.exports = {
   createCompany,
+  deleteById,
   find,
-  findByIdIn,
+  findByUuidIn,
   findBySymbol,
+  findByUuid,
 };
