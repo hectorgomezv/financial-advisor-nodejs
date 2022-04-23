@@ -6,7 +6,7 @@ const buildCompanyState = (companyId, price = 17.21) => ({
   companyId,
   timestamp: Date.now(),
   price,
-  peg: Math.random() * 5,
+  peg: faker.datatype.number({ max: 10 }),
 });
 
 module.exports = {

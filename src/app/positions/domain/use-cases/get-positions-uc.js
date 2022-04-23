@@ -27,10 +27,10 @@ const addWeights = positionsStates => {
 
 module.exports = async () => {
   const positions = await PositionsRepository.find();
-  const companies = await CompaniesRepository.findByIdIn(positions.map(p => p.companyId));
+  const companies = await CompaniesRepository.findByUuidIn(positions.map(p => p.companyUuid));
 
   const positionStates = await Promise.all(positions.map(async position => {
-    const company = companies.find(c => (c._id.toString() === position.companyId.toString()));
+    const company = companies.find(c => (c.uuid === position.companyUuid));
 
     if (!company) {
       throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);

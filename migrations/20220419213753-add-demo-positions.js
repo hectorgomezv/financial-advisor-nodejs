@@ -20,18 +20,19 @@ module.exports = {
     await db.collection(POSITIONS_COLLECTION)
       .insertOne({
         ...POSITIONS[0],
-        companyId: companies[0]._id,
+        companyUuid: companies[0].uuid,
         symbol: companies[0].symbol,
       });
 
     await db.collection(POSITIONS_COLLECTION)
       .insertOne({
         ...POSITIONS[1],
-        companyId: companies[1]._id,
+        companyUuid: companies[1].uuid,
         symbol: companies[1].symbol,
       });
   },
 
   async down(db) {
     await db.collection(POSITIONS_COLLECTION).deleteMany({});
-  },};
+  },
+};

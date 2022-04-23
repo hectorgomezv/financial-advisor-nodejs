@@ -1,12 +1,12 @@
 const Ajv = require('ajv');
-const { v4: uuidv4 } = require('uuid');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
 const { PositionsRepository } = require('../repositories');
 const { findCompanyBySymbol } = require('../../../companies/domain/use-cases');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
+const Position = require('../entities/position');
 
-const schema = {
+const inputSchema = {
   type: 'object',
   properties: {
     targetWeight: { type: 'number', minimum: 0, maximum: 100 },
@@ -18,30 +18,19 @@ const schema = {
 };
 
 const ajv = new Ajv();
-const validate = ajv.compile(schema);
-
-const buildPosition = async input => {
-  const company = await findCompanyBySymbol(input.symbol);
-
-  return {
-    companyId: company._id,
-    symbol: company.symbol,
-    uuid: uuidv4(),
-    targetWeight: input.targetWeight,
-    shares: input.shares,
-  };
-};
+const validate = ajv.compile(inputSchema);
 
 module.exports = async input => {
   if (!validate(input)) {
     throw new ValidationError(validate.errors);
   }
 
-  const position = await buildPosition(input);
-  const currentPositions = await PositionsRepository.findByCompanyId(position.companyId);
+  const company = await findCompanyBySymbol(input.symbol);
+  const position = new Position(input.targetWeight, input.shares, company.uuid, company.symbol);
+  const currentPositions = await PositionsRepository.findByCompanyUuid(position.companyUuid);
 
   if (currentPositions.length) {
-    throw new AlreadyExistError(`Position for company ${input.symbol} (${position.companyId}) already exists`);
+    throw new AlreadyExistError(`Position for company ${input.symbol} (${position.companyUuid}) already exists`);
   }
 
   await PositionsRepository.createPosition(position);
