@@ -1,3 +1,3 @@
-const { companiesRepository } = require('../repositories');
+const { CompaniesRepository } = require('../repositories');
 
-module.exports = () => companiesRepository.find();
+module.exports = () => CompaniesRepository.find();

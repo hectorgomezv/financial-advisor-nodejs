@@ -1,20 +1,20 @@
-const { companiesRepository } = require('../repositories');
+const { CompaniesRepository } = require('../repositories');
 const { HasPositionsError } = require('../errors');
-const { positionsRepository } = require('../../../positions/domain/repositories');
+const { PositionsRepository } = require('../../../positions/domain/repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
 
 module.exports = async uuid => {
-  const company = await companiesRepository.findByUuid(uuid);
+  const company = await CompaniesRepository.findByUuid(uuid);
 
   if (!company) {
     throw new NotFoundError(`Company with uuid ${uuid} not found`);
   }
 
-  const positions = await positionsRepository.findByCompanyId(company._id);
+  const positions = await PositionsRepository.findByCompanyId(company._id);
 
   if (positions.length) {
     throw new HasPositionsError(`Company ${company.name} has ${positions.length} positions associated`);
   }
 
-  return companiesRepository.deleteById(company._id);
+  return CompaniesRepository.deleteById(company._id);
 };

@@ -2,7 +2,7 @@ const Ajv = require('ajv');
 const { v4: uuidv4 } = require('uuid');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
-const { positionsRepository } = require('../repositories');
+const { PositionsRepository } = require('../repositories');
 const { findCompanyBySymbol } = require('../../../companies/domain/use-cases');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
 
@@ -38,13 +38,13 @@ module.exports = async input => {
   }
 
   const position = await buildPosition(input);
-  const currentPositions = await positionsRepository.findByCompanyId(position.companyId);
+  const currentPositions = await PositionsRepository.findByCompanyId(position.companyId);
 
   if (currentPositions.length) {
     throw new AlreadyExistError(`Position for company ${input.symbol} (${position.companyId}) already exists`);
   }
 
-  await positionsRepository.createPosition(position);
+  await PositionsRepository.createPosition(position);
 
   return position;
 };

@@ -1,6 +1,6 @@
 const { InvalidPositionError } = require('../errors');
-const { positionsRepository } = require('../repositories');
-const { companiesRepository, companyStatesRepository } = require('../../../companies/domain/repositories');
+const { PositionsRepository } = require('../repositories');
+const { CompaniesRepository, CompanyStatesRepository } = require('../../../companies/domain/repositories');
 
 const calculatePositionState = (position, company, companyState) => ({
   ...position,
@@ -26,8 +26,8 @@ const addWeights = positionsStates => {
 };
 
 module.exports = async () => {
-  const positions = await positionsRepository.find();
-  const companies = await companiesRepository.findByIdIn(positions.map(p => p.companyId));
+  const positions = await PositionsRepository.find();
+  const companies = await CompaniesRepository.findByIdIn(positions.map(p => p.companyId));
 
   const positionStates = await Promise.all(positions.map(async position => {
     const company = companies.find(c => (c._id.toString() === position.companyId.toString()));
@@ -36,7 +36,7 @@ module.exports = async () => {
       throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
     }
 
-    const companyState = await companyStatesRepository.getLastState(company._id);
+    const companyState = await CompanyStatesRepository.getLastState(company._id);
 
     return calculatePositionState(position, company, companyState);
   }));

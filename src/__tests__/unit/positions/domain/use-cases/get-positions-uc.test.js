@@ -4,8 +4,8 @@ const matchers = require('jest-extended');
 
 const { buildCompany, buildCompanyState, buildPosition } = require('../../../fixtures/doubles');
 const { getPositions } = require('../../../../../app/positions/domain/use-cases');
-const { positionsRepository } = require('../../../../../app/positions/domain/repositories');
-const { companiesRepository, companyStatesRepository } = require('../../../../../app/companies/domain/repositories');
+const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
+const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
 
 expect.extend(matchers);
 
@@ -20,14 +20,14 @@ const POSITIONS = [
 const COMPANY_STATES = [
   buildCompanyState(COMPANIES[0]._id, 126.22),
   buildCompanyState(COMPANIES[1]._id, 77.87),
-]
+];
 
 describe('[unit tests] [get-positions-uc]', () => {
   test('gets positions with their current state', async () => {
-    positionsRepository.find = jest.fn(() => POSITIONS);
-    companiesRepository.findByIdIn = jest.fn(() => COMPANIES);
+    PositionsRepository.find = jest.fn(() => POSITIONS);
+    CompaniesRepository.findByIdIn = jest.fn(() => COMPANIES);
 
-    companyStatesRepository.getLastState = jest.fn()
+    CompanyStatesRepository.getLastState = jest.fn()
       .mockReturnValueOnce(COMPANY_STATES[0])
       .mockReturnValueOnce(COMPANY_STATES[1]);
 
@@ -55,8 +55,8 @@ describe('[unit tests] [get-positions-uc]', () => {
   });
 
   test('throws an error when a position has an invalid company associated', async () => {
-    positionsRepository.find = jest.fn(() => POSITIONS);
-    companiesRepository.findByIdIn = jest.fn(() => [COMPANIES[0]]);
+    PositionsRepository.find = jest.fn(() => POSITIONS);
+    CompaniesRepository.findByIdIn = jest.fn(() => [COMPANIES[0]]);
 
     await expect(getPositions()).rejects.toThrow(`Invalid company for position: ${POSITIONS[1].uuid}`);
   });

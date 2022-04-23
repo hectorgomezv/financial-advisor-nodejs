@@ -1,5 +1,5 @@
-const positionsRepository = require('./positions-repository');
+const PositionsRepository = require('./positions-repository');
 
 module.exports = {
-  positionsRepository,
+  PositionsRepository,
 };

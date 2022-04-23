@@ -2,7 +2,7 @@ const Ajv = require('ajv');
 const { v4: uuidv4 } = require('uuid');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
-const { companiesRepository } = require('../repositories');
+const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
 
 const schema = {
@@ -30,13 +30,14 @@ module.exports = async input => {
   }
 
   const company = buildCompany(input);
-  const exists = await companiesRepository.findBySymbol(company.symbol);
+  const exists = await CompaniesRepository.findBySymbol(company.symbol);
 
   if (exists) {
     throw new AlreadyExistError(`Company ${company.symbol} already exists`);
   }
 
-  await companiesRepository.createCompany(company);
+  const { insertedId } = await CompaniesRepository.createCompany(company);
+  await CompanyStatesRepository.refreshCompanyState({ ...company, _id: insertedId });
 
   return company;
 };
