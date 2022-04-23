@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
 const { companiesRepository } = require('../repositories');
-const { AlreadyExistError } = require('../errors');
+const { AlreadyExistError } = require('../../../shared/domain/errors');
 
 const schema = {
   type: 'object',
@@ -18,7 +18,7 @@ const schema = {
 const ajv = new Ajv();
 const validate = ajv.compile(schema);
 
-const parseInput = input => ({
+const buildCompany = input => ({
   name: input.name.trim(),
   symbol: input.symbol.toUpperCase(),
   uuid: uuidv4(),
@@ -29,7 +29,7 @@ module.exports = async input => {
     throw new ValidationError(validate.errors);
   }
 
-  const company = parseInput(input);
+  const company = buildCompany(input);
   const exists = await companiesRepository.findBySymbol(company.symbol);
 
   if (exists) {

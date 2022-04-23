@@ -39,6 +39,24 @@ const companiesRouter = app => {
       },
     },
   });
+
+  app.route({
+    method: 'DELETE',
+    url: `${BASE_URL}/:uuid`,
+    handler: CompaniesController.deleteCompanyCtl,
+    schema: {
+      response: {
+        201: {},
+        400: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    },
+  });
 };
 
 module.exports = companiesRouter;

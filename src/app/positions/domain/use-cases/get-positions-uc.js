@@ -5,6 +5,7 @@ const { companiesRepository, companyStatesRepository } = require('../../../compa
 const calculatePositionState = (position, company, companyState) => ({
   ...position,
   companyName: company.name,
+  symbol: company.symbol,
   value: Number(companyState.price * position.shares),
 });
 

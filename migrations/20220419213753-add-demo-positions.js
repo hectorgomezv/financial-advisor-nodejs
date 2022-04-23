@@ -18,13 +18,20 @@ module.exports = {
     const companies = await db.collection(COMPANIES_COLLECTION).find().toArray();
 
     await db.collection(POSITIONS_COLLECTION)
-      .insertOne({ ...POSITIONS[0], companyId: companies[0]._id });
+      .insertOne({
+        ...POSITIONS[0],
+        companyId: companies[0]._id,
+        symbol: companies[0].symbol,
+      });
 
     await db.collection(POSITIONS_COLLECTION)
-      .insertOne({ ...POSITIONS[1], companyId: companies[1]._id });
+      .insertOne({
+        ...POSITIONS[1],
+        companyId: companies[1]._id,
+        symbol: companies[1].symbol,
+      });
   },
 
   async down(db) {
     await db.collection(POSITIONS_COLLECTION).deleteMany({});
-  },
-};
+  },};
