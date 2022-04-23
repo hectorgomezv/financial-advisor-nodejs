@@ -9,7 +9,7 @@ const { AlreadyExistError } = require('../../../shared/domain/errors');
 const schema = {
   type: 'object',
   properties: {
-    targetWeight: { type: 'number' },
+    targetWeight: { type: 'number', minimum: 0, maximum: 100 },
     shares: { type: 'number' },
     symbol: { type: 'string' },
   },
