@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "ff65783e-9a2d-42b1-8723-231f8ff6615c",
+		"name": "financial-advisor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "health",
+			"item": [
+				{
+					"name": "/health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "companies",
+			"item": [
+				{
+					"name": "/companies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/companies",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"companies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/companies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"require('lodash');",
+									"",
+									"pm.test(\"Create company\", function () {",
+									"    const { uuid } = pm.response.json();",
+									"    pm.expect(_.isString(uuid)).to.be.true;",
+									"    pm.environment.set(\"companyUuid\", uuid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"symbol\": \"TSLA\",\n    \"name\": \"Tesla Inc.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/companies",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"companies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/companies/{uuid}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/companies/{{companyUuid}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"companies",
+								"{{companyUuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "positions",
+			"item": [
+				{
+					"name": "/positions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/positions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"positions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/positions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"require('lodash');",
+									"",
+									"pm.test(\"Create position\", function () {",
+									"    const { uuid } = pm.response.json();",
+									"    pm.expect(_.isString(uuid)).to.be.true;",
+									"    pm.environment.set(\"positionUuid\", uuid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"symbol\": \"TSLA\",\n    \"targetWeight\": 12,\n    \"shares\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/positions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"positions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/positions/{uuid}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/positions/{{positionUuid}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"positions",
+								"{{positionUuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
