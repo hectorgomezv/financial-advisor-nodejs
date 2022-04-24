@@ -2,14 +2,17 @@ const { faker } = require('@faker-js/faker');
 const { range } = require('lodash/fp');
 const matchers = require('jest-extended');
 
-const { getPositions } = require('../../../../../app/positions/domain/use-cases');
+const PositionsService = require('../../../../../app/positions/domain/services/positions-service');
 const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
 const Position = require('../../../../../app/positions/domain/entities/position');
 const Company = require('../../../../../app/companies/domain/entities/company');
 const CompanyState = require('../../../../../app/companies/domain/entities/company-state');
+const Portfolio = require('../../../../../app/portfolios/domain/entities/portfolio');
 
 expect.extend(matchers);
+
+const PORTFOLIO = new Portfolio(faker.name);
 
 const COMPANIES = (range(0)(4)).map(() => new Company(
   faker.company.companyName(),
@@ -17,8 +20,8 @@ const COMPANIES = (range(0)(4)).map(() => new Company(
 ));
 
 const POSITIONS = [
-  new Position(60, 4, COMPANIES[0].uuid, COMPANIES[0].symbol),
-  new Position(40, 5, COMPANIES[1].uuid, COMPANIES[1].symbol),
+  new Position(PORTFOLIO.uuid, 60, 4, COMPANIES[0].uuid, COMPANIES[0].symbol),
+  new Position(PORTFOLIO.uuid, 40, 5, COMPANIES[1].uuid, COMPANIES[1].symbol),
 ];
 
 const COMPANY_STATES = [
@@ -26,16 +29,16 @@ const COMPANY_STATES = [
   new CompanyState(COMPANIES[1].uuid, 77.87, 2.34),
 ];
 
-describe('[unit tests] [get-positions-uc]', () => {
+describe('[unit tests] [positions-service]', () => {
   test('gets positions with their current state', async () => {
-    PositionsRepository.find = jest.fn(() => POSITIONS);
+    PositionsRepository.findByPortfolioUuid = jest.fn(() => POSITIONS);
     CompaniesRepository.findByUuidIn = jest.fn(() => COMPANIES);
 
     CompanyStatesRepository.getLastState = jest.fn()
       .mockReturnValueOnce(COMPANY_STATES[0])
       .mockReturnValueOnce(COMPANY_STATES[1]);
 
-    const positions = await getPositions();
+    const positions = await PositionsService.getPositionsByPortfolioUuid(faker.datatype.uuid());
 
     expect(positions[0]).toContainEntries([
       ['targetWeight', 60],
@@ -59,9 +62,11 @@ describe('[unit tests] [get-positions-uc]', () => {
   });
 
   test('throws an error when a position has an invalid company associated', async () => {
-    PositionsRepository.find = jest.fn(() => POSITIONS);
+    PositionsRepository.findByPortfolioUuid = jest.fn(() => POSITIONS);
     CompaniesRepository.findByUuidIn = jest.fn(() => [COMPANIES[0]]);
 
-    await expect(getPositions()).rejects.toThrow(`Invalid company for position: ${POSITIONS[1].uuid}`);
+    await expect(PositionsService.getPositionsByPortfolioUuid(faker.datatype.uuid()))
+      .rejects
+      .toThrow(`Invalid company for position: ${POSITIONS[1].uuid}`);
   });
 });

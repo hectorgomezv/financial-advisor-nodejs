@@ -32,6 +32,26 @@ const portfoliosRouter = app => {
       },
     },
   });
+
+  app.route({
+    method: 'POST',
+    url: `${BASE_URL}/:uuid/positions`,
+    handler: PortfoliosController.createPositionCtl,
+    schema: {
+      response: {
+        '2xx': {
+          $ref: 'positionSchema',
+        },
+        400: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    },
+  });
 };
 
 module.exports = portfoliosRouter;

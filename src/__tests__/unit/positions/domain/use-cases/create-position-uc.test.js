@@ -4,10 +4,12 @@ const { default: ValidationError } = require('ajv/dist/runtime/validation_error'
 
 const { createPosition } = require('../../../../../app/positions/domain/use-cases');
 const { CompaniesRepository } = require('../../../../../app/companies/domain/repositories');
+const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
+const { PortfoliosRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { NotFoundError, AlreadyExistError } = require('../../../../../app/shared/domain/errors');
 const Company = require('../../../../../app/companies/domain/entities/company');
-const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
 const Position = require('../../../../../app/positions/domain/entities/position');
+const Portfolio = require('../../../../../app/portfolios/domain/entities/portfolio');
 
 expect.extend(matchers);
 
@@ -19,36 +21,48 @@ const INPUT_POSITION = {
 
 const COMPANY = new Company('Apple Inc.', 'AAPL');
 const CURRENT_POSITIONS = [new Position(faker.datatype.number({ max: 100 }), 10, 'AAPL')];
+const PORTFOLIO = new Portfolio(faker.name);
 
 describe('[unit tests] [create-position-uc]', () => {
-  test('targetWeight should between 0 and 100', async () => {
-    await expect(createPosition({ ...INPUT_POSITION, targetWeight: -3 }))
-      .rejects
-      .toThrow(ValidationError);
-
-    await expect(createPosition({ ...INPUT_POSITION, targetWeight: 101 }))
-      .rejects
-      .toThrow(ValidationError);
-  });
-
-  test('the symbol provided should belong to a known company', async () => {
-    CompaniesRepository.findBySymbol = jest.fn().mockReturnValue(null);
-    await expect(createPosition(INPUT_POSITION)).rejects.toThrow(NotFoundError);
-  });
-
-  test('a position for the company should be unique', async () => {
+  beforeEach(() => {
+    PortfoliosRepository.findByUuid = jest.fn().mockReturnValue(PORTFOLIO);
     CompaniesRepository.findBySymbol = jest.fn().mockReturnValue(COMPANY);
-    PositionsRepository.findByCompanyUuid = jest.fn().mockReturnValue(CURRENT_POSITIONS);
-    await expect(createPosition(INPUT_POSITION)).rejects.toThrow(AlreadyExistError);
+
+    PositionsRepository.findByCompanyUuidAndPortfolioUuid = jest.fn()
+      .mockReturnValue(CURRENT_POSITIONS);
+  });
+
+  test('portfolio for the position should exist', async () => {
+    PortfoliosRepository.findByUuid = jest.fn().mockReturnValue(null);
+    await expect(createPosition(PORTFOLIO.uuid, INPUT_POSITION)).rejects.toThrow(NotFoundError);
+  });
+
+  test('company for the position should exist', async () => {
+    CompaniesRepository.findBySymbol = jest.fn().mockReturnValue(null);
+    await expect(createPosition(PORTFOLIO.uuid, INPUT_POSITION)).rejects.toThrow(NotFoundError);
+  });
+
+  test('targetWeight should between 0 and 100', async () => {
+    await expect(createPosition(PORTFOLIO.uuid, { ...INPUT_POSITION, targetWeight: -3 }))
+      .rejects
+      .toThrow(ValidationError);
+
+    await expect(createPosition(PORTFOLIO.uuid, { ...INPUT_POSITION, targetWeight: 101 }))
+      .rejects
+      .toThrow(ValidationError);
+  });
+
+  test('a position should be unique for the portfolio/company', async () => {
+    await expect(createPosition(PORTFOLIO.uuid, INPUT_POSITION)).rejects.toThrow(AlreadyExistError);
   });
 
   test('should return the created position', async () => {
     const companyUuid = faker.datatype.uuid();
     CompaniesRepository.findBySymbol = jest.fn().mockReturnValue({ ...COMPANY, uuid: companyUuid });
-    PositionsRepository.findByCompanyUuid = jest.fn().mockReturnValue([]);
+    PositionsRepository.findByCompanyUuidAndPortfolioUuid = jest.fn().mockReturnValue([]);
     PositionsRepository.createPosition = jest.fn();
 
-    const result = await createPosition(INPUT_POSITION);
+    const result = await createPosition(PORTFOLIO.uuid, INPUT_POSITION);
 
     expect(result).toContainEntries([
       ['targetWeight', INPUT_POSITION.targetWeight],
