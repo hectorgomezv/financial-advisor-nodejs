@@ -26,7 +26,7 @@ module.exports = async (portfolioUuid, input) => {
     throw new ValidationError(validate.errors);
   }
 
-  const portfolio = PortfoliosRepository.findByUuid(portfolioUuid);
+  const portfolio = await PortfoliosRepository.findByUuid(portfolioUuid);
   const company = await findCompanyBySymbol(input.symbol);
 
   if (!portfolio || !company) {

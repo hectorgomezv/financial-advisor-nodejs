@@ -5,5 +5,7 @@ module.exports = async uuid => {
   const portfolio = await PortfoliosRepository.findByUuid(uuid);
   const positions = await PositionsService.getPositionsByPortfolioUuid(uuid);
 
-  return { ...portfolio, positions, isValid: true };
+  const isValid = (positions.reduce((acc, pos) => acc + pos.targetWeight, 0) === 100);
+
+  return { ...portfolio, positions, isValid };
 };
