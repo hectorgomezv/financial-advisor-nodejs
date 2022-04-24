@@ -12,9 +12,22 @@ const portfoliosRouter = app => {
     handler: PortfoliosController.getPortfoliosCtl,
     schema: {
       response: {
-        '2xx': {
+        200: {
           type: 'array',
           items: { $ref: 'portfolioSchema' },
+        },
+      },
+    },
+  });
+
+  app.route({
+    method: 'GET',
+    url: `${BASE_URL}/:uuid`,
+    handler: PortfoliosController.getPortfolioCtl,
+    schema: {
+      response: {
+        200: {
+          $ref: 'portfolioSchema',
         },
       },
     },
