@@ -17,6 +17,16 @@ services:
       - fa-mongo
     depends_on:
       - fa-mongo
+
+  fa-auth-service:
+    image: "hectorgomezv1/auth-service:${FA_ECHO_SERVER_IMAGE_RELEASE}"
+    ports:
+    - "4400:4400"
+    links:
+      - fa-mongo
+    depends_on:
+      - fa-mongo
+
   fa-echo-server:
     image: "hectorgomezv1/fa-echo-server:${FA_ECHO_SERVER_IMAGE_RELEASE}"
     container_name: fa-echo-server
@@ -25,6 +35,7 @@ services:
     environment:
       - NEW_RELIC_APP_NAME=${FA_ECHO_SERVER_NEW_RELIC_APP_NAME}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+
   fa-mongo:
     image: mongo:5-focal
     ports:
