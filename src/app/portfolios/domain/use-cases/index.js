@@ -1,5 +1,5 @@
-const getPortFolio = require('./get-portfolio');
+const getPortFolios = require('./get-portfolios');
 
 module.exports = {
-  getPortFolio,
+  getPortFolios,
 };

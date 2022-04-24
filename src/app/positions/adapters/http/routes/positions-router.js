@@ -3,7 +3,7 @@ const { positionSerializer } = require('../serializers');
 
 const BASE_URL = '/positions';
 
-const companiesRouter = app => {
+const positionsRouter = app => {
   positionSerializer.init(app);
 
   app.route({
@@ -59,4 +59,4 @@ const companiesRouter = app => {
   });
 };
 
-module.exports = companiesRouter;
+module.exports = positionsRouter;
