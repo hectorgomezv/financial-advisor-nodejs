@@ -1,8 +1,9 @@
 const { PortfoliosRepository } = require('../repositories');
-const { PositionsRepository } = require('../../../positions/domain/repositories');
+const PositionsService = require('../../../positions/domain/services/positions-service');
 
 module.exports = async uuid => {
   const portfolio = await PortfoliosRepository.findByUuid(uuid);
+  const positions = await PositionsService.getPositionsByPortfolioUuid(uuid);
 
-  return portfolio;
+  return { ...portfolio, positions, isValid: true };
 };

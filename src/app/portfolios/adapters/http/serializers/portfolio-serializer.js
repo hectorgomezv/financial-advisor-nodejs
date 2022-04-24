@@ -5,6 +5,8 @@ const init = app => {
     properties: {
       uuid: { type: 'string' },
       name: { type: 'string' },
+      positions: { type: 'array', items: { $ref: 'positionSchema' } },
+      isValid: { type: 'boolean' },
     },
   });
 };

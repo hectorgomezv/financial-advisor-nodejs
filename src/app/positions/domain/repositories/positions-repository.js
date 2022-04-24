@@ -13,6 +13,7 @@ const createPosition = position => collection.insertOne(position);
 const deleteById = id => collection.deleteOne({ _id: id });
 const find = async () => collection.find({}).toArray();
 const findByCompanyUuid = companyUuid => collection.find({ companyUuid }).toArray();
+const findByPortfolioUuid = portfolioUuid => collection.find({ portfolioUuid }).toArray();
 const findByUuid = uuid => collection.findOne({ uuid });
 
 module.exports = {
@@ -20,5 +21,6 @@ module.exports = {
   deleteById,
   find,
   findByCompanyUuid,
+  findByPortfolioUuid,
   findByUuid,
 };
