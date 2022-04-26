@@ -51,6 +51,19 @@ services:
       - NEW_RELIC_APP_NAME=${FA_ECHO_SERVER_NEW_RELIC_APP_NAME}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
 
+  fa-nginx: 
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+    links:
+      - financial-advisor-nodejs
+      - fa-auth-service
+      - fa-echo-server
+    depends_on:
+      - financial-advisor-nodejs
+      - fa-auth-service
+      - fa-echo-server
+
   fa-mongo:
     image: mongo:5-focal
     ports:

@@ -1,6 +1,6 @@
 const { getHealthController } = require('../controllers/health-controller');
 
-const BASE_URL = '/health';
+const BASE_URL = '/api/v1/health';
 
 const schema = {
   response: {
