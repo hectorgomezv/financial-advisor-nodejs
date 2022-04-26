@@ -1,7 +1,7 @@
 const CompaniesController = require('../controllers/companies-controller');
 const { companySerializer } = require('../serializers');
 
-const BASE_URL = '/companies';
+const BASE_URL = '/api/v1/companies';
 
 const companiesRouter = app => {
   companySerializer.init(app);

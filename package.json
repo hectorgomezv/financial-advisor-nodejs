@@ -1,12 +1,13 @@
 {
   "name": "financial-advisor",
-  "version": "0.6.0",
+  "version": "0.11.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "./node_modules/.bin/nodemon app | pino-pretty",
     "start": "node app",
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",

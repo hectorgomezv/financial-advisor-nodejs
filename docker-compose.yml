@@ -17,6 +17,31 @@ services:
       - fa-mongo
     depends_on:
       - fa-mongo
+
+  fa-auth-service:
+    image: "hectorgomezv1/auth-service:${FA_AUTH_SERVICE_IMAGE_RELEASE}"
+    ports:
+      - "4200:4200"
+    environment:
+      - FA_AUTH_SERVICE_IMAGE_RELEASE=${FA_AUTH_SERVICE_IMAGE_RELEASE}
+      - SUPERADMIN_EMAIL=${FA_AUTH_SERVICE_SUPERADMIN_EMAIL}
+      - SUPERADMIN_PASSWORD=${FA_AUTH_SERVICE_SUPERADMIN_PASSWORD}
+      - PORT=${FA_AUTH_SERVICE_PORT}
+      - BASE_URL=${FA_AUTH_SERVICE_BASE_URL}
+      - MONGO_CONNECTION_STRING=${FA_AUTH_SERVICE_MONGO_CONNECTION_STRING}
+      - MONGO_DATABASE_NAME=${FA_AUTH_SERVICE_MONGO_DATABASE_NAME}
+      - SENDGRID_API_KEY=${FA_AUTH_SERVICE_SENDGRID_API_KEY}
+      - BASE_EMAIL=${FA_AUTH_SERVICE_BASE_EMAIL}
+      - JWT_SECRET=${FA_AUTH_SERVICE_JWT_SECRET}
+      - TOKEN_EXPIRATION=${FA_AUTH_SERVICE_TOKEN_EXPIRATION}
+      - REFRESH_TOKEN_EXPIRATION=${FA_AUTH_SERVICE_REFRESH_TOKEN_EXPIRATION}
+      - ACTIVATION_CODE_EXPIRATION=${FA_AUTH_SERVICE_ACTIVATION_CODE_EXPIRATION}
+      - RESET_PASSWORD_CODE_EXPIRATION=${FA_AUTH_SERVICE_RESET_PASSWORD_CODE_EXPIRATION}
+    links:
+      - fa-mongo
+    depends_on:
+      - fa-mongo
+
   fa-echo-server:
     image: "hectorgomezv1/fa-echo-server:${FA_ECHO_SERVER_IMAGE_RELEASE}"
     container_name: fa-echo-server
@@ -25,6 +50,20 @@ services:
     environment:
       - NEW_RELIC_APP_NAME=${FA_ECHO_SERVER_NEW_RELIC_APP_NAME}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+
+  fa-nginx: 
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+    links:
+      - financial-advisor-nodejs
+      - fa-auth-service
+      - fa-echo-server
+    depends_on:
+      - financial-advisor-nodejs
+      - fa-auth-service
+      - fa-echo-server
+
   fa-mongo:
     image: mongo:5-focal
     ports:

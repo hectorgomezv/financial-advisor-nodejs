@@ -1,7 +1,7 @@
 const PositionsController = require('../controllers/positions-controller');
 const { positionSerializer } = require('../serializers');
 
-const BASE_URL = '/positions';
+const BASE_URL = '/api/v1/positions';
 
 const companiesRouter = app => {
   positionSerializer.init(app);
