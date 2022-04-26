@@ -1,5 +1,6 @@
 const CompaniesController = require('../controllers/companies-controller');
 const { companySerializer } = require('../serializers');
+const { authDecorator } = require('../../../../shared/adapters/http/middleware');
 
 const BASE_URL = '/api/v1/companies';
 
@@ -9,6 +10,7 @@ const companiesRouter = app => {
   app.route({
     method: 'GET',
     url: BASE_URL,
+    preValidation: authDecorator.addAuthHeader,
     handler: CompaniesController.getCompaniesCtl,
     schema: {
       response: {
