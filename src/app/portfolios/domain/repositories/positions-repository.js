@@ -7,8 +7,6 @@ const init = async () => {
   collection = db.collection('positions');
 };
 
-init();
-
 const createPosition = position => collection.insertOne(position);
 const deleteById = id => collection.deleteOne({ _id: id });
 const find = async () => collection.find({}).toArray();
@@ -26,4 +24,5 @@ module.exports = {
   findByCompanyUuidAndPortfolioUuid,
   findByPortfolioUuid,
   findByUuid,
+  init,
 };

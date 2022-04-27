@@ -1,6 +1,12 @@
 const { StatusCodes } = require('http-status-codes');
-const { getPortfolios, getPortfolio } = require('../../../domain/use-cases');
-const { createPosition } = require('../../../../positions/domain/use-cases');
+
+const {
+  createPosition,
+  deletePosition,
+  getPortfolios,
+  getPortfolio,
+} = require('../../../domain/use-cases');
+
 const { mapError } = require('../../../../shared/adapters/http/error-mapper');
 
 const getPortfolioCtl = async (req, res) => {
@@ -26,8 +32,20 @@ const createPositionCtl = async (req, res) => {
   }
 };
 
+const deletePositionCtl = async (req, res) => {
+  try {
+    const { uuid } = req.params;
+    await deletePosition(uuid);
+    res.code(StatusCodes.NO_CONTENT).send();
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
+};
+
 module.exports = {
   createPositionCtl,
+  deletePositionCtl,
   getPortfolioCtl,
   getPortfoliosCtl,
 };

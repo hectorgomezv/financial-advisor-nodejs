@@ -8,6 +8,7 @@ const { HTTP_SERVER_PORT } = process.env;
 
 const start = async () => {
   try {
+    await repositories.init();
     await http.webServer.listen(HTTP_SERVER_PORT);
     companiesTasks.start();
   } catch (err) {

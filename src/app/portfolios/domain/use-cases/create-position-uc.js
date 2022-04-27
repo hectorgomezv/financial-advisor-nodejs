@@ -1,8 +1,7 @@
 const Ajv = require('ajv');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
-const { PositionsRepository } = require('../repositories');
-const { PortfoliosRepository } = require('../../../portfolios/domain/repositories');
+const { PortfoliosRepository, PositionsRepository } = require('../repositories');
 const { findCompanyBySymbol } = require('../../../companies/domain/use-cases');
 const { AlreadyExistError, NotFoundError } = require('../../../shared/domain/errors');
 const Position = require('../entities/position');

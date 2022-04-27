@@ -1,5 +1,5 @@
 const { PortfoliosRepository } = require('../repositories');
-const PositionsService = require('../../../positions/domain/services/positions-service');
+const PositionsService = require('../services/positions-service');
 
 module.exports = async uuid => {
   const portfolio = await PortfoliosRepository.findByUuid(uuid);

@@ -7,8 +7,6 @@ const init = async () => {
   collection = db.collection('portfolios');
 };
 
-init();
-
 const createPortfolio = portfolio => collection.insertOne(portfolio);
 const deleteByUuid = uuid => collection.deleteOne({ uuid });
 const findAll = () => collection.find({}).toArray();
@@ -19,4 +17,5 @@ module.exports = {
   deleteByUuid,
   findAll,
   findByUuid,
+  init,
 };

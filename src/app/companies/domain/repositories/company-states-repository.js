@@ -10,8 +10,6 @@ const init = async () => {
   collection = db.collection('companyStates');
 };
 
-init();
-
 const parseState = (companyUuid, data) => ({
   uuid: uuidv4(),
   companyUuid,
@@ -32,5 +30,6 @@ const getLastState = async companyUuid => collection.findOne(
 
 module.exports = {
   getLastState,
+  init,
   refreshCompanyState,
 };

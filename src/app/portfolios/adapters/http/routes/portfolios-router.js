@@ -1,9 +1,10 @@
 const PortfoliosController = require('../controllers/portfolios-controller');
-const { portfolioSerializer } = require('../serializers');
+const { portfolioSerializer, positionSerializer } = require('../serializers');
 
 const BASE_URL = '/api/v1/portfolios';
 
 const portfoliosRouter = app => {
+  positionSerializer.init(app);
   portfolioSerializer.init(app);
 
   app.route({
@@ -42,6 +43,24 @@ const portfoliosRouter = app => {
         '2xx': {
           $ref: 'positionSchema',
         },
+        400: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    },
+  });
+
+  app.route({
+    method: 'DELETE',
+    url: `${BASE_URL}/:uuid/positions/:positionUuid`,
+    handler: PortfoliosController.deletePositionCtl,
+    schema: {
+      response: {
+        204: {},
         400: {
           type: 'object',
           properties: {

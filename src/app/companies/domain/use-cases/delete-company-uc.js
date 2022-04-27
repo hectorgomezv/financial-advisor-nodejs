@@ -1,6 +1,6 @@
 const { CompaniesRepository } = require('../repositories');
 const { HasPositionsError } = require('../errors');
-const { PositionsRepository } = require('../../../positions/domain/repositories');
+const { PositionsRepository } = require('../../../portfolios/domain/repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
 
 module.exports = async uuid => {

@@ -13,7 +13,7 @@ const getDb = async () => {
   try {
     if (!db) {
       await client.connect();
-      db = client.db(MONGO_DATABASE_NAME);
+      db = await client.db(MONGO_DATABASE_NAME);
     }
   } catch (err) {
     logger.error(err);
