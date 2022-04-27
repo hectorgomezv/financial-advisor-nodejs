@@ -2,7 +2,7 @@ const { faker } = require('@faker-js/faker');
 const { range } = require('lodash/fp');
 const matchers = require('jest-extended');
 
-const { PositionsService ``} = require('../../../../../app/portfolios/domain/services');
+const { PositionsService } = require('../../../../../app/portfolios/domain/services');
 const { PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
 const Company = require('../../../../../app/companies/domain/entities/company');
