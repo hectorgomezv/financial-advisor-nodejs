@@ -1,9 +1,6 @@
-const { database } = require('../../../../infrastructure/datasources/database');
-
 let collection;
 
-const init = async () => {
-  const db = await database.getDb();
+const init = async db => {
   collection = db.collection('companies');
 };
 

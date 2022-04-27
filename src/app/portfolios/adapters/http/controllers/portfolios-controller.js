@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 
 const {
+  // createPortfolio,
   createPosition,
   deletePosition,
   getPortfolios,
@@ -18,6 +19,19 @@ const getPortfolioCtl = async (req, res) => {
 const getPortfoliosCtl = async (req, res) => {
   const portfolios = await getPortfolios();
   res.send(portfolios);
+};
+
+// TODO: create portfolio
+const createPortfolioCtl = async (req, res) => {
+  try {
+    const { auth } = req;
+    const input = req.body;
+    // const position = await createPosition(portfolioUuid, input);
+    res.code(StatusCodes.CREATED).send({ auth, input });
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
 };
 
 const createPositionCtl = async (req, res) => {
@@ -44,6 +58,7 @@ const deletePositionCtl = async (req, res) => {
 };
 
 module.exports = {
+  createPortfolioCtl,
   createPositionCtl,
   deletePositionCtl,
   getPortfolioCtl,

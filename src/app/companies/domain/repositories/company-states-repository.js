@@ -1,12 +1,10 @@
 const { v4: uuidv4 } = require('uuid');
 
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
-const { database } = require('../../../../infrastructure/datasources/database');
 
 let collection;
 
-const init = async () => {
-  const db = await database.getDb();
+const init = async db => {
   collection = db.collection('companyStates');
 };
 

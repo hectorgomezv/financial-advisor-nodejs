@@ -36,6 +36,26 @@ const portfoliosRouter = app => {
 
   app.route({
     method: 'POST',
+    url: BASE_URL,
+    handler: PortfoliosController.createPortfolioCtl,
+    schema: {
+      response: {
+        200: {
+          $ref: 'portfolioSchema',
+        },
+        400: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    },
+  });
+
+  app.route({
+    method: 'POST',
     url: `${BASE_URL}/:uuid/positions`,
     handler: PortfoliosController.createPositionCtl,
     schema: {

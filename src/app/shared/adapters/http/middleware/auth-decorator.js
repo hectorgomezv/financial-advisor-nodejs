@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const { get, isString } = require('lodash');
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = process.env;
@@ -10,8 +10,8 @@ const { JWT_SECRET } = process.env;
  * @returns {String} token extracted from headers.
  */
 function extractAccessToken(headers) {
-  const authorization = _.get(headers, 'authorization');
-  if (!authorization || !_.isString(authorization) || !authorization.startsWith('Bearer ')) {
+  const authorization = get(headers, 'authorization');
+  if (!authorization || !isString(authorization) || !authorization.startsWith('Bearer ')) {
     throw new Error('Authorization required');
   }
 
