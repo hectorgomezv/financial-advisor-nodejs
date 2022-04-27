@@ -33,6 +33,7 @@
     "nodemon": "^2.0.15",
     "pino": "^7.10.0",
     "pino-http": "^6.6.0",
+    "rbac": "^5.0.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

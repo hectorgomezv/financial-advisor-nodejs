@@ -5,7 +5,8 @@ const { default: ValidationError } = require('ajv/dist/runtime/validation_error'
 const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
 
-const schema = {
+const ajv = new Ajv();
+const validate = ajv.compile({
   type: 'object',
   properties: {
     symbol: { type: 'string' },
@@ -13,10 +14,7 @@ const schema = {
   },
   required: ['symbol', 'name'],
   additionalProperties: false,
-};
-
-const ajv = new Ajv();
-const validate = ajv.compile(schema);
+});
 
 const buildCompany = input => ({
   name: input.name.trim(),
