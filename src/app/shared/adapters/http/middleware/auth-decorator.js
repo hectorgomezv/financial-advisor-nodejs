@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 
-const { FINANCIAL_ADVISOR_JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 /**
  * Extracts the JWT sent in the request headers without verifying its expiration.
@@ -33,7 +33,7 @@ function parseAuth(headers) {
       roles,
       permissions,
       exp,
-    } = jwt.verify(token, FINANCIAL_ADVISOR_JWT_SECRET);
+    } = jwt.verify(token, JWT_SECRET);
 
     return {
       id,
