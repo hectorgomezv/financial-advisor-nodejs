@@ -4,6 +4,7 @@ const { default: ValidationError } = require('ajv/dist/runtime/validation_error'
 const { PortfoliosRepository, PositionsRepository } = require('../repositories');
 const { findCompanyBySymbol } = require('../../../companies/domain/use-cases');
 const { AlreadyExistError, NotFoundError } = require('../../../shared/domain/errors');
+const { RbacService } = require('../../../shared/domain/services');
 const Position = require('../entities/position');
 
 const inputSchema = {
@@ -20,7 +21,9 @@ const inputSchema = {
 const ajv = new Ajv();
 const validate = ajv.compile(inputSchema);
 
-module.exports = async (portfolioUuid, input) => {
+module.exports = async (context, portfolioUuid, input) => {
+  await RbacService.isUserAllowedTo(context, 'create', 'portfolio');
+
   if (!validate(input)) {
     throw new ValidationError(validate.errors);
   }

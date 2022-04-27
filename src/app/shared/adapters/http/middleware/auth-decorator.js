@@ -32,16 +32,14 @@ function parseAuth(headers) {
     const {
       id,
       email,
-      roles,
-      permissions,
+      role,
       exp,
     } = jwt.verify(token, JWT_SECRET);
 
     return {
       id,
       email,
-      roles,
-      permissions,
+      role,
       exp,
       accessToken: token,
     };

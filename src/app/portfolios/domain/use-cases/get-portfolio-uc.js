@@ -1,8 +1,10 @@
 const { PortfoliosRepository } = require('../repositories');
 const PositionsService = require('../services/positions-service');
 const { NotFoundError } = require('../../../shared/domain/errors');
+const { RbacService } = require('../../../shared/domain/services');
 
-module.exports = async uuid => {
+module.exports = async (context, uuid) => {
+  await RbacService.isUserAllowedTo(context, 'read', 'portfolio');
   const portfolio = await PortfoliosRepository.findByUuid(uuid);
 
   if (!portfolio) {

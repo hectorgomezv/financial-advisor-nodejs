@@ -10,14 +10,16 @@ const {
 const { mapError } = require('../../../../shared/adapters/http/error-mapper');
 
 const getCompaniesCtl = async (req, res) => {
-  const companies = await getCompanies();
+  const { context } = req;
+  const companies = await getCompanies(context);
   res.code(StatusCodes.OK).send(companies);
 };
 
 const getCompanyCtl = async (req, res) => {
   try {
+    const { context } = req;
     const { uuid } = req.params;
-    const company = await getCompany(uuid);
+    const company = await getCompany(context, uuid);
     res.send(company);
   } catch (err) {
     const error = mapError(err);
@@ -27,7 +29,8 @@ const getCompanyCtl = async (req, res) => {
 
 const createCompanyCtl = async (req, res) => {
   try {
-    const company = await createCompany(req.body);
+    const { context } = req;
+    const company = await createCompany(context, req.body);
     res.code(StatusCodes.CREATED).send(company);
   } catch (err) {
     const error = mapError(err);
@@ -37,8 +40,9 @@ const createCompanyCtl = async (req, res) => {
 
 const deleteCompanyCtl = async (req, res) => {
   try {
+    const { context } = req;
     const { uuid } = req.params;
-    await deleteCompany(uuid);
+    await deleteCompany(context, uuid);
     res.code(StatusCodes.NO_CONTENT).send();
   } catch (err) {
     const error = mapError(err);

@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
 const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
+const { RbacService } = require('../../../shared/domain/services');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
 
 const ajv = new Ajv();
@@ -22,7 +23,9 @@ const buildCompany = input => ({
   uuid: uuidv4(),
 });
 
-module.exports = async input => {
+module.exports = async (context, input) => {
+  await RbacService.isUserAllowedTo(context, 'create', 'company');
+
   if (!validate(input)) {
     throw new ValidationError(validate.errors);
   }

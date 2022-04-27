@@ -2,8 +2,10 @@ const { CompaniesRepository } = require('../repositories');
 const { HasPositionsError } = require('../errors');
 const { PositionsRepository } = require('../../../portfolios/domain/repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
+const { RbacService } = require('../../../shared/domain/services');
 
-module.exports = async uuid => {
+module.exports = async (context, uuid) => {
+  await RbacService.isUserAllowedTo(context, 'delete', 'company');
   const company = await CompaniesRepository.findByUuid(uuid);
 
   if (!company) {

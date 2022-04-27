@@ -12,8 +12,9 @@ const { mapError } = require('../../../../shared/adapters/http/error-mapper');
 
 const getPortfolioCtl = async (req, res) => {
   try {
+    const { context } = req;
     const { uuid } = req.params;
-    const portfolio = await getPortfolio(uuid);
+    const portfolio = await getPortfolio(context, uuid);
     res.send(portfolio);
   } catch (err) {
     const error = mapError(err);
@@ -22,17 +23,19 @@ const getPortfolioCtl = async (req, res) => {
 };
 
 const getPortfoliosCtl = async (req, res) => {
-  const portfolios = await getPortfolios();
+  const { context } = req;
+  const portfolios = await getPortfolios(context);
   res.send(portfolios);
 };
 
 // TODO: create portfolio
 const createPortfolioCtl = async (req, res) => {
   try {
-    const { auth } = req;
+    const { context } = req;
     const input = req.body;
-    // const position = await createPosition(portfolioUuid, input);
-    res.code(StatusCodes.CREATED).send({ auth, input });
+    // const portfolio = await createPortfolio(context, input);
+    const portfolio = {};
+    res.code(StatusCodes.CREATED).send(portfolio);
   } catch (err) {
     const error = mapError(err);
     res.code(error.status).send(error);
@@ -42,8 +45,9 @@ const createPortfolioCtl = async (req, res) => {
 const createPositionCtl = async (req, res) => {
   try {
     const { uuid: portfolioUuid } = req.params;
+    const { context } = req;
     const input = req.body;
-    const position = await createPosition(portfolioUuid, input);
+    const position = await createPosition(context, portfolioUuid, input);
     res.code(StatusCodes.CREATED).send(position);
   } catch (err) {
     const error = mapError(err);
@@ -53,8 +57,9 @@ const createPositionCtl = async (req, res) => {
 
 const deletePositionCtl = async (req, res) => {
   try {
+    const { context } = req;
     const { uuid: portfolioUuid, positionUuid } = req.params;
-    await deletePosition(portfolioUuid, positionUuid);
+    await deletePosition(context, portfolioUuid, positionUuid);
     res.code(StatusCodes.NO_CONTENT).send();
   } catch (err) {
     const error = mapError(err);
