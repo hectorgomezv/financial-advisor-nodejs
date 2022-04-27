@@ -20,7 +20,7 @@ const INPUT_POSITION = {
 
 const COMPANY = new Company('Apple Inc.', 'AAPL');
 const CURRENT_POSITIONS = [new Position(faker.datatype.number({ max: 100 }), 10, 'AAPL')];
-const PORTFOLIO = new Portfolio(faker.name);
+const PORTFOLIO = new Portfolio(faker.name.firstName(), faker.datatype.uuid());
 const CONTEXT = {};
 
 describe('[unit tests] [create-position-uc]', () => {

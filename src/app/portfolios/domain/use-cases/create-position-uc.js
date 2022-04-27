@@ -7,7 +7,8 @@ const { AlreadyExistError, NotFoundError } = require('../../../shared/domain/err
 const { RbacService } = require('../../../shared/domain/services');
 const Position = require('../entities/position');
 
-const inputSchema = {
+const ajv = new Ajv();
+const validate = ajv.compile({
   type: 'object',
   properties: {
     targetWeight: { type: 'number', minimum: 0, maximum: 100 },
@@ -16,10 +17,7 @@ const inputSchema = {
   },
   required: ['targetWeight', 'shares', 'symbol'],
   additionalProperties: false,
-};
-
-const ajv = new Ajv();
-const validate = ajv.compile(inputSchema);
+});
 
 module.exports = async (context, portfolioUuid, input) => {
   await RbacService.isUserAllowedTo(context, 'create', 'portfolio');
