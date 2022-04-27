@@ -2,18 +2,18 @@ const { MongoClient } = require('mongodb');
 const logger = require('../../logger');
 
 const {
-  FINANCIAL_ADVISOR_MONGO_DATABASE_NAME,
-  FINANCIAL_ADVISOR_MONGO_CONNECTION_STRING,
+  MONGO_DATABASE_NAME,
+  MONGO_CONNECTION_STRING,
 } = process.env;
 
 let db;
-const client = new MongoClient(FINANCIAL_ADVISOR_MONGO_CONNECTION_STRING);
+const client = new MongoClient(MONGO_CONNECTION_STRING);
 
 const getDb = async () => {
   try {
     if (!db) {
       await client.connect();
-      db = client.db(FINANCIAL_ADVISOR_MONGO_DATABASE_NAME);
+      db = client.db(MONGO_DATABASE_NAME);
     }
   } catch (err) {
     logger.error(err);
