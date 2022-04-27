@@ -18,6 +18,6 @@ module.exports = {
   },
 
   async down(db) {
-    await db.collection(COLLECTION).deleteMany({ symbol: { $in: COMPANIES.map((c) => c.symbol) } });
+    await db.collection(COLLECTION).deleteMany({ symbol: { $in: COMPANIES.map(c => c.symbol) } });
   },
 };

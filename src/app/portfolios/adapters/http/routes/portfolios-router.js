@@ -44,7 +44,7 @@ const portfoliosRouter = app => {
     handler: PortfoliosController.createPortfolioCtl,
     schema: {
       response: {
-        200: {
+        201: {
           $ref: 'portfolioSchema',
         },
         400: {

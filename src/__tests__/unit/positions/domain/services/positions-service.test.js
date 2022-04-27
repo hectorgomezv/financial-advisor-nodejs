@@ -11,7 +11,7 @@ const { Portfolio, Position } = require('../../../../../app/portfolios/domain/en
 
 expect.extend(matchers);
 
-const PORTFOLIO = new Portfolio(faker.name);
+const PORTFOLIO = new Portfolio(faker.name.firstName(), faker.datatype.uuid());
 
 const COMPANIES = (range(0)(4)).map(() => new Company(
   faker.company.companyName(),
