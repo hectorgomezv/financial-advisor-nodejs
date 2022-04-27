@@ -25,6 +25,7 @@ const companiesRouter = app => {
   app.route({
     method: 'POST',
     url: BASE_URL,
+    preValidation: authDecorator.addAuthHeader,
     handler: CompaniesController.createCompanyCtl,
     schema: {
       response: {
@@ -45,6 +46,7 @@ const companiesRouter = app => {
   app.route({
     method: 'DELETE',
     url: `${BASE_URL}/:uuid`,
+    preValidation: authDecorator.addAuthHeader,
     handler: CompaniesController.deleteCompanyCtl,
     schema: {
       response: {

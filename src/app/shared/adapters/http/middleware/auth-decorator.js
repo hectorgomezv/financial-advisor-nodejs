@@ -1,6 +1,8 @@
 const { get, isString } = require('lodash');
 const jwt = require('jsonwebtoken');
 
+const { InvalidJWTError } = require('../errors');
+
 const { JWT_SECRET } = process.env;
 
 /**
@@ -12,7 +14,7 @@ const { JWT_SECRET } = process.env;
 function extractAccessToken(headers) {
   const authorization = get(headers, 'authorization');
   if (!authorization || !isString(authorization) || !authorization.startsWith('Bearer ')) {
-    throw new Error('Authorization required');
+    throw new InvalidJWTError('Authorization required');
   }
 
   return authorization.slice(7, authorization.length);
@@ -44,7 +46,7 @@ function parseAuth(headers) {
       accessToken: token,
     };
   } catch (err) {
-    throw new Error(err.message);
+    throw new InvalidJWTError(err.message);
   }
 }
 

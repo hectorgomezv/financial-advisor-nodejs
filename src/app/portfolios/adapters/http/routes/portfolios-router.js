@@ -1,5 +1,6 @@
 const PortfoliosController = require('../controllers/portfolios-controller');
 const { portfolioSerializer, positionSerializer } = require('../serializers');
+const { authDecorator } = require('../../../../shared/adapters/http/middleware');
 
 const BASE_URL = '/api/v1/portfolios';
 
@@ -10,6 +11,7 @@ const portfoliosRouter = app => {
   app.route({
     method: 'GET',
     url: BASE_URL,
+    preValidation: authDecorator.addAuthHeader,
     handler: PortfoliosController.getPortfoliosCtl,
     schema: {
       response: {
@@ -24,6 +26,7 @@ const portfoliosRouter = app => {
   app.route({
     method: 'GET',
     url: `${BASE_URL}/:uuid`,
+    preValidation: authDecorator.addAuthHeader,
     handler: PortfoliosController.getPortfolioCtl,
     schema: {
       response: {
@@ -37,6 +40,7 @@ const portfoliosRouter = app => {
   app.route({
     method: 'POST',
     url: BASE_URL,
+    preValidation: authDecorator.addAuthHeader,
     handler: PortfoliosController.createPortfolioCtl,
     schema: {
       response: {
@@ -57,6 +61,7 @@ const portfoliosRouter = app => {
   app.route({
     method: 'POST',
     url: `${BASE_URL}/:uuid/positions`,
+    preValidation: authDecorator.addAuthHeader,
     handler: PortfoliosController.createPositionCtl,
     schema: {
       response: {
@@ -77,6 +82,7 @@ const portfoliosRouter = app => {
   app.route({
     method: 'DELETE',
     url: `${BASE_URL}/:uuid/positions/:positionUuid`,
+    preValidation: authDecorator.addAuthHeader,
     handler: PortfoliosController.deletePositionCtl,
     schema: {
       response: {

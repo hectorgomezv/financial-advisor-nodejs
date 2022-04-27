@@ -48,8 +48,8 @@ const createPositionCtl = async (req, res) => {
 
 const deletePositionCtl = async (req, res) => {
   try {
-    const { uuid } = req.params;
-    await deletePosition(uuid);
+    const { uuid: portfolioUuid, positionUuid } = req.params;
+    await deletePosition(portfolioUuid, positionUuid);
     res.code(StatusCodes.NO_CONTENT).send();
   } catch (err) {
     const error = mapError(err);
