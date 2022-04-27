@@ -1,5 +1,5 @@
-const { InvalidPositionError } = require('../errors');
 const { PositionsRepository } = require('../repositories');
+const { InvalidPositionError } = require('../errors');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../companies/domain/repositories');
 
 const calculatePositionState = (position, company, companyState) => ({
@@ -25,8 +25,8 @@ const addWeights = positionsStates => {
   });
 };
 
-module.exports = async () => {
-  const positions = await PositionsRepository.find();
+const getPositionsByPortfolioUuid = async portfolioUuid => {
+  const positions = await PositionsRepository.findByPortfolioUuid(portfolioUuid);
   const companies = await CompaniesRepository.findByUuidIn(positions.map(p => p.companyUuid));
 
   const positionStates = await Promise.all(positions.map(async position => {
@@ -42,4 +42,8 @@ module.exports = async () => {
   }));
 
   return addWeights(positionStates);
+};
+
+module.exports = {
+  getPositionsByPortfolioUuid,
 };

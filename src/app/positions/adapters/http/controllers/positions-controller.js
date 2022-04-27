@@ -1,12 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 
-const { createPosition, deletePosition, getPositions } = require('../../../domain/use-cases');
+const { createPosition, deletePosition } = require('../../../domain/use-cases');
 const { mapError } = require('../../../../shared/adapters/http/error-mapper');
-
-const getPositionsCtl = async (req, res) => {
-  const positions = await getPositions();
-  res.send(positions);
-};
 
 const createPositionCtl = async (req, res) => {
   try {
@@ -32,5 +27,4 @@ const deletePositionCtl = async (req, res) => {
 module.exports = {
   createPositionCtl,
   deletePositionCtl,
-  getPositionsCtl,
 };
