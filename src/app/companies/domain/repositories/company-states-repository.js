@@ -26,6 +26,9 @@ const getLastState = async companyUuid => collection.findOne(
   { sort: { timestamp: -1 }, limit: 1 },
 );
 
+// TODO: implement this using aggregation pipeline and use it in companies-service
+// const getLastStatesByCompanyUuids = async companyUuids => ...
+
 module.exports = {
   getLastState,
   init,

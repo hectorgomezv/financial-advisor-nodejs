@@ -5,7 +5,7 @@ module.exports = async (portfolioUuid, positionUuid) => {
   const position = await PositionsRepository.findByUuid(positionUuid);
 
   if (!position) {
-    throw new NotFoundError(`Position with uuid ${positionUuid} not found`);
+    throw new NotFoundError(`Position ${positionUuid} not found`);
   }
 
   return PositionsRepository.deleteById(position._id);

@@ -1,11 +1,28 @@
 const { StatusCodes } = require('http-status-codes');
 
-const { createCompany, deleteCompany, getCompanies } = require('../../../domain/use-cases');
+const {
+  createCompany,
+  deleteCompany,
+  getCompanies,
+  getCompany,
+} = require('../../../domain/use-cases');
+
 const { mapError } = require('../../../../shared/adapters/http/error-mapper');
 
 const getCompaniesCtl = async (req, res) => {
   const companies = await getCompanies();
   res.code(StatusCodes.OK).send(companies);
+};
+
+const getCompanyCtl = async (req, res) => {
+  try {
+    const { uuid } = req.params;
+    const company = await getCompany(uuid);
+    res.send(company);
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
 };
 
 const createCompanyCtl = async (req, res) => {
@@ -33,4 +50,5 @@ module.exports = {
   createCompanyCtl,
   deleteCompanyCtl,
   getCompaniesCtl,
+  getCompanyCtl,
 };

@@ -14,10 +14,22 @@ const companiesRouter = app => {
     handler: CompaniesController.getCompaniesCtl,
     schema: {
       response: {
-        '2xx': {
+        200: {
           type: 'array',
           items: { $ref: 'companySchema' },
         },
+      },
+    },
+  });
+
+  app.route({
+    method: 'GET',
+    url: `${BASE_URL}/:uuid`,
+    preValidation: authDecorator.addAuthHeader,
+    handler: CompaniesController.getCompanyCtl,
+    schema: {
+      response: {
+        200: { $ref: 'companySchema' },
       },
     },
   });

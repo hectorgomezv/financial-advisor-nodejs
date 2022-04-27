@@ -6,6 +6,14 @@ const init = app => {
       uuid: { type: 'string' },
       symbol: { type: 'string' },
       name: { type: 'string' },
+      state: {
+        type: 'object',
+        properties: {
+          price: { type: 'number' },
+          peg: { type: 'number' },
+          timestamp: { type: 'number' },
+        },
+      },
     },
   });
 };

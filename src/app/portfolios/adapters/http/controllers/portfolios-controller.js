@@ -11,9 +11,14 @@ const {
 const { mapError } = require('../../../../shared/adapters/http/error-mapper');
 
 const getPortfolioCtl = async (req, res) => {
-  const { uuid } = req.params;
-  const portfolio = await getPortfolio(uuid);
-  res.send(portfolio);
+  try {
+    const { uuid } = req.params;
+    const portfolio = await getPortfolio(uuid);
+    res.send(portfolio);
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
 };
 
 const getPortfoliosCtl = async (req, res) => {
