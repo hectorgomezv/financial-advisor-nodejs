@@ -2,14 +2,12 @@ const { faker } = require('@faker-js/faker');
 const matchers = require('jest-extended');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
-const { createPosition } = require('../../../../../app/positions/domain/use-cases');
+const { createPosition } = require('../../../../../app/portfolios/domain/use-cases');
 const { CompaniesRepository } = require('../../../../../app/companies/domain/repositories');
-const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
-const { PortfoliosRepository } = require('../../../../../app/portfolios/domain/repositories');
+const { PortfoliosRepository, PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { NotFoundError, AlreadyExistError } = require('../../../../../app/shared/domain/errors');
 const Company = require('../../../../../app/companies/domain/entities/company');
-const Position = require('../../../../../app/positions/domain/entities/position');
-const Portfolio = require('../../../../../app/portfolios/domain/entities/portfolio');
+const { Portfolio, Position } = require('../../../../../app/portfolios/domain/entities');
 
 expect.extend(matchers);
 

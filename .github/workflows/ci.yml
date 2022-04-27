@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Run unit tests
+      - name: Run tests
         run: npm ci && npm run test
 
       - name: Extract commit metadata

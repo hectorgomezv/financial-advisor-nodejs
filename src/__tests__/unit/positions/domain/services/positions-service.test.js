@@ -2,13 +2,12 @@ const { faker } = require('@faker-js/faker');
 const { range } = require('lodash/fp');
 const matchers = require('jest-extended');
 
-const PositionsService = require('../../../../../app/positions/domain/services/positions-service');
-const { PositionsRepository } = require('../../../../../app/positions/domain/repositories');
+const { PositionsService ``} = require('../../../../../app/portfolios/domain/services');
+const { PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
-const Position = require('../../../../../app/positions/domain/entities/position');
 const Company = require('../../../../../app/companies/domain/entities/company');
 const CompanyState = require('../../../../../app/companies/domain/entities/company-state');
-const Portfolio = require('../../../../../app/portfolios/domain/entities/portfolio');
+const { Portfolio, Position } = require('../../../../../app/portfolios/domain/entities');
 
 expect.extend(matchers);
 
