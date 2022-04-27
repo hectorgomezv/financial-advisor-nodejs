@@ -1,7 +1,7 @@
 const PortfoliosController = require('../controllers/portfolios-controller');
 const { portfolioSerializer } = require('../serializers');
 
-const BASE_URL = '/portfolios';
+const BASE_URL = '/api/v1/portfolios';
 
 const portfoliosRouter = app => {
   portfolioSerializer.init(app);
