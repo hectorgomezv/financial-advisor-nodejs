@@ -1,13 +1,13 @@
 const { CronJob } = require('cron');
-const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
+const { CompaniesService, CompanyStatesService } = require('../services');
 
 const FIVE_SECONDS_MS = 5 * 1000;
 const MARKET_OPEN_CRON_EXP = '0 32 15 * * *';
 const MARKET_CLOSE_CRON_EXP = '0 02 22 * * *';
 
 const refreshCompanyStates = async () => {
-  const companies = await CompaniesRepository.find();
-  await Promise.all(companies.map(c => CompanyStatesRepository.refreshCompanyState(c)));
+  const companies = await CompaniesService.getAll();
+  await Promise.all(companies.map(c => CompanyStatesService.refreshCompanyState(c)));
 };
 
 const run = () => {

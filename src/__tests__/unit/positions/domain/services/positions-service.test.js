@@ -33,7 +33,7 @@ describe('[unit tests] [positions-service]', () => {
     PositionsRepository.findByPortfolioUuid = jest.fn(() => POSITIONS);
     CompaniesRepository.findByUuidIn = jest.fn(() => COMPANIES);
 
-    CompanyStatesRepository.getLastState = jest.fn()
+    CompanyStatesRepository.getLastByCompanyUuid = jest.fn()
       .mockReturnValueOnce(COMPANY_STATES[0])
       .mockReturnValueOnce(COMPANY_STATES[1]);
 

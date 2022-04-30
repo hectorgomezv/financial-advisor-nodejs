@@ -36,7 +36,7 @@ const getPositionsByPortfolioUuid = async portfolioUuid => {
       throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
     }
 
-    const companyState = await CompanyStatesRepository.getLastState(company.uuid);
+    const companyState = await CompanyStatesRepository.getLastByCompanyUuid(company.uuid);
 
     return calculatePositionState(position, company, companyState);
   }));
