@@ -65,6 +65,16 @@ const findBySymbol = async symbol => {
   return company;
 };
 
+const findByUuid = async uuid => {
+  const company = await CompaniesRepository.findByUuid(uuid);
+
+  if (!company) {
+    throw new NotFoundError(`Company with uuid ${uuid} not found`);
+  }
+
+  return company;
+};
+
 const getAll = () => CompaniesRepository.find();
 
 const getCompaniesWithLastState = async uuids => {
@@ -82,6 +92,7 @@ module.exports = {
   createCompany,
   deleteCompany,
   findBySymbol,
+  findByUuid,
   getAll,
   getCompaniesWithLastState,
 };
