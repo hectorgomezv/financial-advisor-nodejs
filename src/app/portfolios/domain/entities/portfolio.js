@@ -5,6 +5,7 @@ class Portfolio {
     this.uuid = uuidv4();
     this.name = name;
     this.ownerId = ownerId;
+    this.created = Date.now();
   }
 }
 
