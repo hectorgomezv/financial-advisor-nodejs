@@ -2,9 +2,12 @@ const Ajv = require('ajv');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
 const { Company } = require('../entities');
+const { HasPositionsError } = require('../errors');
 const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
+const { PositionsRepository } = require('../../../portfolios/domain/repositories');
+const { NotFoundError } = require('../../../shared/domain/errors');
 
 const ajv = new Ajv();
 const companySchema = ajv.compile({
@@ -36,6 +39,32 @@ const createCompany = async data => {
   return company;
 };
 
+const deleteCompany = async uuid => {
+  const company = await CompaniesRepository.findByUuid(uuid);
+
+  if (!company) {
+    throw new NotFoundError(`Company with uuid ${uuid} not found`);
+  }
+
+  const positions = await PositionsRepository.findByCompanyUuid(company.uuid);
+
+  if (positions.length) {
+    throw new HasPositionsError(`Company ${company.name} has ${positions.length} positions associated`);
+  }
+
+  return CompaniesRepository.deleteById(company._id);
+};
+
+const findBySymbol = async symbol => {
+  const company = await CompaniesRepository.findBySymbol(symbol);
+
+  if (!company) {
+    throw new NotFoundError(`Company with symbol ${symbol} not found`);
+  }
+
+  return company;
+};
+
 const getAll = () => CompaniesRepository.find();
 
 const getCompaniesWithLastState = async uuids => {
@@ -51,6 +80,8 @@ const getCompaniesWithLastState = async uuids => {
 
 module.exports = {
   createCompany,
+  deleteCompany,
+  findBySymbol,
   getAll,
   getCompaniesWithLastState,
 };
