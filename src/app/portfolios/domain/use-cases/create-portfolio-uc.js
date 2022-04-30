@@ -1,29 +1,9 @@
-const Ajv = require('ajv');
-const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
-
-const { PortfoliosRepository } = require('../repositories');
-const { Portfolio } = require('../entities');
+const { PortfoliosService } = require('../services');
 const { RbacService } = require('../../../shared/domain/services');
 
-const ajv = new Ajv();
-const validate = ajv.compile({
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-  },
-  required: ['name'],
-  additionalProperties: false,
-});
-
 module.exports = async (context, input) => {
+  const { auth: { id: ownerId } } = context;
   await RbacService.isUserAllowedTo(context, 'create', 'portfolio');
 
-  if (!validate(input)) {
-    throw new ValidationError(validate.errors);
-  }
-
-  const portfolio = new Portfolio(input.name, context.auth.id);
-  await PortfoliosRepository.createPortfolio(portfolio);
-
-  return portfolio;
+  return PortfoliosService.createPortfolio(input, ownerId);
 };

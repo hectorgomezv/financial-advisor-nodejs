@@ -1,7 +1,8 @@
-const { PortfoliosRepository } = require('../repositories');
+const { PortfoliosService } = require('../services');
 const { RbacService } = require('../../../shared/domain/services');
 
 module.exports = async context => {
+  const { auth: { id } } = context;
   await RbacService.isUserAllowedTo(context, 'read', 'portfolio');
-  return PortfoliosRepository.findAll();
+  return PortfoliosService.getPortfoliosByOwnerId(id);
 };
