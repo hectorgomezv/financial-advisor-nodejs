@@ -1,7 +1,9 @@
+const { CronJob } = require('cron');
 const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
 
-const TWO_SECONDS_MS = 2 * 1000;
-const ONE_HOUR_MS = 60 * 60 * 1000;
+const FIVE_SECONDS_MS = 5 * 1000;
+const MARKET_OPEN_CRON_EXP = '0 32 15 * * *';
+const MARKET_CLOSE_CRON_EXP = '0 02 22 * * *';
 
 const refreshCompanyStates = async () => {
   const companies = await CompaniesRepository.find();
@@ -9,8 +11,14 @@ const refreshCompanyStates = async () => {
 };
 
 const run = () => {
-  setTimeout(() => refreshCompanyStates(), TWO_SECONDS_MS);
-  setInterval(() => refreshCompanyStates(), ONE_HOUR_MS);
+  setTimeout(() => refreshCompanyStates(), FIVE_SECONDS_MS);
+
+  const jobs = [
+    new CronJob(MARKET_OPEN_CRON_EXP, () => refreshCompanyStates(), null, false, 'Europe/Madrid'),
+    new CronJob(MARKET_CLOSE_CRON_EXP, () => refreshCompanyStates(), null, false, 'Europe/Madrid'),
+  ];
+
+  jobs.map(j => j.start());
 };
 
 module.exports = { run };
