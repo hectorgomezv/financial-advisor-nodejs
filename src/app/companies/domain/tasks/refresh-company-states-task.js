@@ -1,7 +1,7 @@
 const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
 
-const TWO_SECONDS_MS = 2 * 1000;
-const ONE_HOUR_MS = 60 * 60 * 1000;
+const FIVE_SECONDS_MS = 5 * 1000;
+const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
 
 const refreshCompanyStates = async () => {
   const companies = await CompaniesRepository.find();
@@ -9,8 +9,8 @@ const refreshCompanyStates = async () => {
 };
 
 const run = () => {
-  setTimeout(() => refreshCompanyStates(), TWO_SECONDS_MS);
-  setInterval(() => refreshCompanyStates(), ONE_HOUR_MS);
+  setTimeout(() => refreshCompanyStates(), FIVE_SECONDS_MS);
+  setInterval(() => refreshCompanyStates(), TWELVE_HOURS_MS);
 };
 
 module.exports = { run };
