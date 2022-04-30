@@ -1,7 +1,7 @@
 const Ajv = require('ajv');
-const { v4: uuidv4 } = require('uuid');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
+const { Company } = require('../entities');
 const { CompaniesRepository, CompanyStatesRepository } = require('../repositories');
 const { AlreadyExistError } = require('../../../shared/domain/errors');
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
@@ -17,18 +17,12 @@ const companySchema = ajv.compile({
   additionalProperties: false,
 });
 
-const buildCompany = input => ({
-  name: input.name.trim(),
-  symbol: input.symbol.toUpperCase(),
-  uuid: uuidv4(),
-});
-
 const createCompany = async data => {
   if (!companySchema(data)) {
     throw new ValidationError(companySchema.errors);
   }
 
-  const company = buildCompany(data);
+  const company = new Company(data.name, data.symbol);
   const exists = await CompaniesRepository.findBySymbol(company.symbol);
 
   if (exists) {

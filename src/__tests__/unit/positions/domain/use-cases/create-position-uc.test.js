@@ -7,7 +7,7 @@ const { CompaniesRepository } = require('../../../../../app/companies/domain/rep
 const { PortfoliosRepository, PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { NotFoundError, AlreadyExistError } = require('../../../../../app/shared/domain/errors');
 const { RbacService } = require('../../../../../app/shared/domain/services');
-const Company = require('../../../../../app/companies/domain/entities/company');
+const { Company } = require('../../../../../app/companies/domain/entities');
 const { Portfolio, Position } = require('../../../../../app/portfolios/domain/entities');
 
 expect.extend(matchers);

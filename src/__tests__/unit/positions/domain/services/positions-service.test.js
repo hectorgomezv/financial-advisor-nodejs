@@ -5,8 +5,7 @@ const matchers = require('jest-extended');
 const { PositionsService } = require('../../../../../app/portfolios/domain/services');
 const { PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
-const Company = require('../../../../../app/companies/domain/entities/company');
-const CompanyState = require('../../../../../app/companies/domain/entities/company-state');
+const { Company, CompanyState} = require('../../../../../app/companies/domain/entities');
 const { Portfolio, Position } = require('../../../../../app/portfolios/domain/entities');
 
 expect.extend(matchers);
@@ -15,7 +14,7 @@ const PORTFOLIO = new Portfolio(faker.name.firstName(), faker.datatype.uuid());
 
 const COMPANIES = (range(0)(4)).map(() => new Company(
   faker.company.companyName(),
-  faker.random.word().toUpperCase(),
+  faker.random.word(),
 ));
 
 const POSITIONS = [

@@ -4,7 +4,7 @@ class Company {
   constructor(name, symbol) {
     this.uuid = uuidv4();
     this.name = name;
-    this.symbol = symbol;
+    this.symbol = symbol.toUpperCase();
   }
 }
 
