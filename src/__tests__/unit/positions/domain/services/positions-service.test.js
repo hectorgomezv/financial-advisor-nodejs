@@ -101,6 +101,72 @@ describe('[unit tests] [positions-service]', () => {
     });
   });
 
+  describe('[updatePosition]', () => {
+    beforeEach(() => {
+      PortfoliosRepository.findByUuid = jest.fn().mockReturnValue(PORTFOLIO);
+      CompaniesRepository.findBySymbol = jest.fn().mockReturnValue(COMPANY);
+      PositionsRepository.findByCompanyUuidAndPortfolioUuid = jest.fn()
+        .mockReturnValue([CURRENT_POSITIONS]);
+    });
+
+    test('portfolio for the position should exist', async () => {
+      PortfoliosRepository.findByUuid = jest.fn().mockReturnValue(null);
+
+      await expect(PositionsService.updatePosition(PORTFOLIO.uuid, INPUT_POSITION))
+        .rejects
+        .toThrow(NotFoundError);
+    });
+
+    test('the position should exist', async () => {
+      PortfoliosRepository.findByUuid = jest.fn().mockReturnValue(PORTFOLIO);
+      PositionsRepository.findByCompanyUuidAndPortfolioUuid = jest.fn().mockReturnValue([]);
+
+      await expect(PositionsService.updatePosition(PORTFOLIO.uuid, INPUT_POSITION))
+        .rejects
+        .toThrow(NotFoundError);
+    });
+
+    test('company for the position should exist', async () => {
+      CompaniesRepository.findBySymbol = jest.fn().mockReturnValue(null);
+
+      await expect(PositionsService.updatePosition(PORTFOLIO.uuid, INPUT_POSITION))
+        .rejects
+        .toThrow(NotFoundError);
+    });
+
+    test('targetWeight should between 0 and 100', async () => {
+      await expect(PositionsService
+        .updatePosition(PORTFOLIO.uuid, { ...INPUT_POSITION, targetWeight: -3 }))
+        .rejects
+        .toThrow(ValidationError);
+
+      await expect(PositionsService
+        .updatePosition(PORTFOLIO.uuid, { ...INPUT_POSITION, targetWeight: 101 }))
+        .rejects
+        .toThrow(ValidationError);
+    });
+
+    test('should return the modified position', async () => {
+      const companyUuid = faker.datatype.uuid();
+
+      CompaniesRepository.findBySymbol = jest.fn()
+        .mockReturnValue({ ...COMPANY, uuid: companyUuid });
+
+      PositionsRepository.findByCompanyUuidAndPortfolioUuid = jest.fn()
+        .mockReturnValue([POSITIONS[0]]);
+
+      PositionsRepository.updatePosition = jest.fn();
+      PositionsRepository.findByUuid = jest.fn().mockReturnValue(POSITIONS[1]);
+
+      const result = await PositionsService.updatePosition(PORTFOLIO.uuid, {
+        ...INPUT_POSITION,
+        symbol: POSITIONS[0].symbol,
+      });
+
+      expect(result).toEqual(POSITIONS[1]);
+    });
+  });
+
   describe('[getPositionsByPortfolioUuid]', () => {
     test('gets positions with their current state', async () => {
       CompaniesRepository.findByUuidIn = jest.fn(() => COMPANIES);

@@ -6,6 +6,7 @@ const {
   deletePosition,
   getPortfolios,
   getPortfolio,
+  updatePosition,
 } = require('../../../domain/use-cases');
 
 const { mapError } = require('../../../../shared/adapters/http/error-mapper');
@@ -65,10 +66,24 @@ const deletePositionCtl = async (req, res) => {
   }
 };
 
+const updatePositionCtl = async (req, res) => {
+  try {
+    const { uuid: portfolioUuid } = req.params;
+    const { context } = req;
+    const input = req.body;
+    const position = await updatePosition(context, portfolioUuid, input);
+    res.code(StatusCodes.OK).send(position);
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
+};
+
 module.exports = {
   createPortfolioCtl,
   createPositionCtl,
   deletePositionCtl,
   getPortfolioCtl,
   getPortfoliosCtl,
+  updatePositionCtl,
 };
