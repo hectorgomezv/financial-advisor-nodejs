@@ -90,7 +90,7 @@ async function getPositionsByPortfolioUuid(portfolioUuid) {
     return calculatePositionState(position, company, companyState);
   }));
 
-  return addWeights(positionStates);
+  return addWeights(positionStates).sort((a, b) => a.value - b.value).reverse();
 }
 
 async function updatePosition(portfolioUuid, data) {
