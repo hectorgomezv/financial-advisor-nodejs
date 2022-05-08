@@ -42,7 +42,7 @@ const addWeights = positionsStates => {
   });
 };
 
-const createPosition = async (portfolioUuid, data) => {
+async function createPosition(portfolioUuid, data) {
   if (!positionSchema(data)) {
     throw new ValidationError(positionSchema.errors);
   }
@@ -72,9 +72,9 @@ const createPosition = async (portfolioUuid, data) => {
   await PositionsRepository.createPosition(position);
 
   return position;
-};
+}
 
-const getPositionsByPortfolioUuid = async portfolioUuid => {
+async function getPositionsByPortfolioUuid(portfolioUuid) {
   const positions = await PositionsRepository.findByPortfolioUuid(portfolioUuid);
   const companies = await CompaniesRepository.findByUuidIn(positions.map(p => p.companyUuid));
 
@@ -91,9 +91,41 @@ const getPositionsByPortfolioUuid = async portfolioUuid => {
   }));
 
   return addWeights(positionStates);
-};
+}
+
+async function updatePosition(portfolioUuid, data) {
+  if (!positionSchema(data)) {
+    throw new ValidationError(positionSchema.errors);
+  }
+
+  const portfolio = await PortfoliosRepository.findByUuid(portfolioUuid);
+  const company = await CompaniesRepository.findBySymbol(data.symbol);
+
+  if (!portfolio || !company) {
+    throw new NotFoundError('Invalid reference for position');
+  }
+
+  const [currentPosition] = await PositionsRepository.findByCompanyUuidAndPortfolioUuid(
+    company.uuid,
+    portfolioUuid,
+  );
+
+  if (!currentPosition) {
+    throw new NotFoundError('Position not found');
+  }
+
+  await PositionsRepository.updatePosition(currentPosition.uuid, {
+    targetWeight: data.targetWeight,
+    shares: data.shares,
+    companyUuid: company.uuid,
+    symbol: company.symbol,
+  });
+
+  return PositionsRepository.findByUuid(currentPosition.uuid);
+}
 
 module.exports = {
   createPosition,
   getPositionsByPortfolioUuid,
+  updatePosition,
 };

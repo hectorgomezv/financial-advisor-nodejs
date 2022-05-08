@@ -80,6 +80,27 @@ const portfoliosRouter = app => {
   });
 
   app.route({
+    method: 'PUT',
+    url: `${BASE_URL}/:uuid/positions`,
+    preValidation: authDecorator.addAuthHeader,
+    handler: PortfoliosController.updatePositionCtl,
+    schema: {
+      response: {
+        200: {
+          $ref: 'positionSchema',
+        },
+        400: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    },
+  });
+
+  app.route({
     method: 'DELETE',
     url: `${BASE_URL}/:uuid/positions/:positionUuid`,
     preValidation: authDecorator.addAuthHeader,

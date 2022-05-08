@@ -14,6 +14,7 @@ const findByCompanyUuidAndPortfolioUuid = (companyUuid, portfolioUuid) => collec
 
 const findByPortfolioUuid = portfolioUuid => collection.find({ portfolioUuid }).toArray();
 const findByUuid = uuid => collection.findOne({ uuid });
+const updatePosition = (uuid, patch) => collection.updateOne({ uuid }, { $set: patch });
 
 module.exports = {
   createPosition,
@@ -24,4 +25,5 @@ module.exports = {
   findByPortfolioUuid,
   findByUuid,
   init,
+  updatePosition,
 };
