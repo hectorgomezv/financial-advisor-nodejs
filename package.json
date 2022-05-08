@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/hectorgomezv/node-financial-advisor#readme",
   "dependencies": {
+    "@fastify/cors": "^7.0.0",
     "ajv": "^8.11.0",
     "axios": "^0.26.1",
     "cron": "^1.8.3",
