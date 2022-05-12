@@ -6,7 +6,7 @@ const { default: ValidationError } = require('ajv/dist/runtime/validation_error'
 const { PositionsService } = require('../../../../../app/portfolios/domain/services');
 const { PortfoliosRepository, PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
-const { Company, CompanyState} = require('../../../../../app/companies/domain/entities');
+const { Company, CompanyState } = require('../../../../../app/companies/domain/entities');
 const { Portfolio, Position } = require('../../../../../app/portfolios/domain/entities');
 const { NotFoundError, AlreadyExistError } = require('../../../../../app/shared/domain/errors');
 
