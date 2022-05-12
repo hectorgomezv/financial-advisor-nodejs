@@ -9,8 +9,16 @@ const { CORS_BASE_URL } = process.env;
 
 const app = fastify({ logger });
 
+const getAllowedOrigins = () => {
+  const allowedOrigins = [/localhost/];
+
+  return CORS_BASE_URL
+    ? [...allowedOrigins, new URL(CORS_BASE_URL).hostname]
+    : allowedOrigins;
+};
+
 app.register(cors, {
-  origin: [/localhost/, new URL(CORS_BASE_URL).hostname],
+  origin: getAllowedOrigins(),
 });
 
 companiesRouter(app);
