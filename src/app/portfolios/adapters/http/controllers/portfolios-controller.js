@@ -4,6 +4,7 @@ const {
   createPortfolio,
   createPosition,
   deletePosition,
+  deletePortfolio,
   getPortfolios,
   getPortfolio,
   updatePosition,
@@ -35,6 +36,18 @@ const createPortfolioCtl = async (req, res) => {
     const input = req.body;
     const portfolio = await createPortfolio(context, input);
     res.code(StatusCodes.CREATED).send(portfolio);
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
+};
+
+const deletePortfolioCtl = async (req, res) => {
+  try {
+    const { context } = req;
+    const { uuid } = req.params;
+    await deletePortfolio(context, uuid);
+    res.code(StatusCodes.NO_CONTENT);
   } catch (err) {
     const error = mapError(err);
     res.code(error.status).send(error);
@@ -82,6 +95,7 @@ const updatePositionCtl = async (req, res) => {
 module.exports = {
   createPortfolioCtl,
   createPositionCtl,
+  deletePortfolioCtl,
   deletePositionCtl,
   getPortfolioCtl,
   getPortfoliosCtl,
