@@ -59,6 +59,25 @@ const portfoliosRouter = app => {
   });
 
   app.route({
+    method: 'DELETE',
+    url: `${BASE_URL}/:uuid`,
+    preValidation: authDecorator.addAuthHeader,
+    handler: PortfoliosController.deletePortfolioCtl,
+    schema: {
+      response: {
+        204: {},
+        400: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    },
+  });
+
+  app.route({
     method: 'POST',
     url: `${BASE_URL}/:uuid/positions`,
     preValidation: authDecorator.addAuthHeader,

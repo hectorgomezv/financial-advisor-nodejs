@@ -93,6 +93,10 @@ async function getPositionsByPortfolioUuid(portfolioUuid) {
   return addWeights(positionStates).sort((a, b) => a.value - b.value).reverse();
 }
 
+async function deletePositionsByPortfolioUuid(portfolioUuid) {
+  return PositionsRepository.deleteByPortfolioUuid(portfolioUuid);
+}
+
 async function updatePosition(portfolioUuid, data) {
   if (!positionSchema(data)) {
     throw new ValidationError(positionSchema.errors);
@@ -126,6 +130,7 @@ async function updatePosition(portfolioUuid, data) {
 
 module.exports = {
   createPosition,
+  deletePositionsByPortfolioUuid,
   getPositionsByPortfolioUuid,
   updatePosition,
 };

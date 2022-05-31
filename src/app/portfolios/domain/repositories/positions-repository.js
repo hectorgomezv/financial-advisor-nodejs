@@ -6,6 +6,7 @@ const init = async db => {
 
 const createPosition = position => collection.insertOne(position);
 const deleteById = id => collection.deleteOne({ _id: id });
+const deleteByPortfolioUuid = portfolioUuid => collection.deleteMany({ portfolioUuid });
 const find = async () => collection.find({}).toArray();
 const findByCompanyUuid = companyUuid => collection.find({ companyUuid }).toArray();
 
@@ -19,6 +20,7 @@ const updatePosition = (uuid, patch) => collection.updateOne({ uuid }, { $set: p
 module.exports = {
   createPosition,
   deleteById,
+  deleteByPortfolioUuid,
   find,
   findByCompanyUuid,
   findByCompanyUuidAndPortfolioUuid,
