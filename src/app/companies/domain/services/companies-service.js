@@ -75,12 +75,25 @@ const findByUuid = async uuid => {
   return company;
 };
 
-const getAll = () => CompaniesRepository.find();
-
 const getCompaniesWithLastState = async uuids => {
   const companies = await CompaniesRepository.findByUuidIn(uuids);
-  const promises = companies.map(c => CompanyStatesRepository.getLastByCompanyUuid(c.uuid));
-  const states = await Promise.all(promises);
+
+  const states = await Promise.all(companies
+    .map(c => CompanyStatesRepository.getLastByCompanyUuid(c.uuid)));
+
+  return companies.map(company => ({
+    ...company,
+    state: { ...states.find(s => s.companyUuid === company.uuid) },
+  }));
+};
+
+const getAll = () => CompaniesRepository.find();
+
+const getAllWithLastState = async () => {
+  const companies = await CompaniesRepository.find();
+
+  const states = await Promise.all(companies
+    .map(c => CompanyStatesRepository.getLastByCompanyUuid(c.uuid)));
 
   return companies.map(company => ({
     ...company,
@@ -94,5 +107,6 @@ module.exports = {
   findBySymbol,
   findByUuid,
   getAll,
+  getAllWithLastState,
   getCompaniesWithLastState,
 };
