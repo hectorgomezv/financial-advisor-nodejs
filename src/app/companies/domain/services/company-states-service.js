@@ -8,7 +8,7 @@ const refreshCompanyState = async ({ uuid: companyUuid, symbol }) => {
   const companyState = await yahooFinanceClient.getQuoteSummary(symbol);
 
   if (!isValidCompanyState(companyState)) {
-    return logger.error(`Malformed company state received: ${companyState}`);
+    return logger.error(`Malformed company state for ${symbol} received: ${JSON.stringify(companyState)}`);
   }
 
   return CompanyStatesRepository.createCompanyState({ ...companyState, companyUuid });
