@@ -1,6 +1,6 @@
 const { CompanyStatesRepository } = require('../repositories');
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
-const { logger } = require('../../../../infrastructure');
+const logger = require('../../../../infrastructure/logger');
 
 const isValidCompanyState = companyState => !!companyState.price;
 
