@@ -8,7 +8,7 @@ const { AlreadyExistError } = require('../../../shared/domain/errors');
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
 const { PositionsRepository } = require('../../../portfolios/domain/repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
-const { logger } = require('../../../../infrastructure');
+const logger = require('../../../../infrastructure/logger');
 
 const ajv = new Ajv();
 const companySchema = ajv.compile({
