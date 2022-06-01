@@ -8,6 +8,7 @@ const { AlreadyExistError } = require('../../../shared/domain/errors');
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
 const { PositionsRepository } = require('../../../portfolios/domain/repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
+const { logger } = require('../../../../infrastructure');
 
 const ajv = new Ajv();
 const companySchema = ajv.compile({
@@ -34,6 +35,7 @@ const createCompany = async data => {
 
   await CompaniesRepository.createCompany(company);
   const companyState = await yahooFinanceClient.getQuoteSummary(company.symbol);
+  logger.info(`Creating company ${company.name}-${company.symbol} with state ${companyState}`);
   await CompanyStatesRepository.createCompanyState({ ...companyState, companyUuid: company.uuid });
 
   return company;
