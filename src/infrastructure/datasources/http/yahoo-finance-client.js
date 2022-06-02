@@ -1,12 +1,24 @@
 const { default: axios } = require('axios');
+const { get } = require('lodash');
 const { v4: uuidv4 } = require('uuid');
 
-const mapCompanyStateResponse = data => ({
-  uuid: uuidv4(),
-  timestamp: Date.now(),
-  price: Number(data.summaryDetail.ask.raw),
-  peg: Number(data.defaultKeyStatistics.pegRatio.raw),
-});
+const mapCompanyStateResponse = data => {
+  const {
+    summaryDetail: {
+      ask,
+      bid,
+      open,
+      previousClose,
+    },
+  } = data;
+
+  return {
+    uuid: uuidv4(),
+    timestamp: Date.now(),
+    price: Number(get(ask, 'raw') || get(bid, 'raw') || get(open, 'raw') || get(previousClose, 'raw')),
+    peg: Number(data.defaultKeyStatistics.pegRatio.raw),
+  };
+};
 
 const { PROVIDER_API_TOKEN, PROVIDER_BASE_URL } = process.env;
 

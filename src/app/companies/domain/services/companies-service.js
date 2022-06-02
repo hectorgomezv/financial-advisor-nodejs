@@ -8,7 +8,6 @@ const { AlreadyExistError } = require('../../../shared/domain/errors');
 const { yahooFinanceClient } = require('../../../../infrastructure/datasources/http');
 const { PositionsRepository } = require('../../../portfolios/domain/repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
-const logger = require('../../../../infrastructure/logger');
 
 const ajv = new Ajv();
 const companySchema = ajv.compile({
@@ -35,7 +34,6 @@ const createCompany = async data => {
 
   await CompaniesRepository.createCompany(company);
   const companyState = await yahooFinanceClient.getQuoteSummary(company.symbol);
-  logger.info(`Creating company ${company.name}-${company.symbol} with state ${companyState}`);
   await CompanyStatesRepository.createCompanyState({ ...companyState, companyUuid: company.uuid });
 
   return company;
@@ -94,13 +92,7 @@ const getAll = () => CompaniesRepository.find();
 const getAllWithLastState = async () => {
   const companies = await CompaniesRepository.find();
 
-  const states = await Promise.all(companies
-    .map(c => CompanyStatesRepository.getLastByCompanyUuid(c.uuid)));
-
-  return companies.map(company => ({
-    ...company,
-    state: { ...states.find(s => s.companyUuid === company.uuid) },
-  }));
+  return getCompaniesWithLastState(companies.map(c => c.uuid));
 };
 
 module.exports = {
