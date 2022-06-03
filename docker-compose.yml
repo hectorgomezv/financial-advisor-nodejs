@@ -58,12 +58,16 @@ services:
     build: ./docker/nginx
     ports:
       - "80:80"
+      - "443:443"
     links:
       - financial-advisor-nodejs
       - fa-auth-service
     depends_on:
       - financial-advisor-nodejs
       - fa-auth-service
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
 
   fa-mongo:
     image: mongo:5-focal
