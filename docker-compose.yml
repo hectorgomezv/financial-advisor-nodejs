@@ -72,5 +72,15 @@ services:
     command: [--auth]  
     volumes:
       - mongo_data:/data/db
+
+  # README: https://www.programonaut.com/setup-ssl-with-docker-nginx-and-lets-encrypt/
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email ${CERT_EMAIL} -d ${CERT_DOMAIN} --agree-tos
+
 volumes:
   mongo_data:
