@@ -45,6 +45,15 @@ services:
     depends_on:
       - fa-mongo
 
+  fa-frontend:
+    image: "hectorgomezv1/fa-frontend:${FA_FRONTEND_IMAGE_RELEASE}"
+    ports:
+      - "9000:9000"
+    links:
+      - financial-advisor-nodejs
+    depends_on:
+      - financial-advisor-nodejs
+
   fa-nginx: 
     build: ./docker/nginx
     ports:
