@@ -4,15 +4,15 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 const { EMAIL, PASSWORD } = __ENV;
-const baseUrl = 'http://localhost/api/v1';
-let accessToken;
+const baseUrl = 'https://financial-advisor.site/api/v1';
 
 export const options = {
   vus: 20,
   duration: '300s',
 };
 
-const getAccessToken = () => {
+export function setup() {
+  console.log('executing setup()');
   const loginUrl = `${baseUrl}/auth/accounts/login`;
 
   const params = {
@@ -30,16 +30,16 @@ const getAccessToken = () => {
 
   const { body } = http.post(loginUrl, payload, params);
   const bodyParsed = JSON.parse(body);
-  accessToken = bodyParsed.data.accessToken;
+  console.log(`saving ${bodyParsed.data.accessToken}`);
 
-  return accessToken;
-};
+  return bodyParsed.data.accessToken;
+}
 
-export default function run() {
+export default function run(accessToken) {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken || getAccessToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   };
 
