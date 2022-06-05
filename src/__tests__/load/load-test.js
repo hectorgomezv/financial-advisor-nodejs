@@ -30,8 +30,9 @@ const getAccessToken = () => {
 
   const { body } = http.post(loginUrl, payload, params);
   const bodyParsed = JSON.parse(body);
+  accessToken = bodyParsed.data.accessToken;
 
-  return bodyParsed.data.accessToken;
+  return accessToken;
 };
 
 export default function run() {
