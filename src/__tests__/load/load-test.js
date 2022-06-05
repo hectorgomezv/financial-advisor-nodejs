@@ -4,7 +4,8 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 const { EMAIL, PASSWORD } = __ENV;
-const baseUrl = 'https://financial-advisor.site/api/v1';
+const baseUrl = 'http://localhost/api/v1';
+let accessToken;
 
 export const options = {
   vus: 20,
@@ -34,16 +35,14 @@ const getAccessToken = () => {
 };
 
 export default function run() {
-  const accessToken = getAccessToken();
-
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken || getAccessToken()}`,
     },
   };
 
   const res = http.get(`${baseUrl}/companies`, params);
   console.log(JSON.stringify(res));
-  sleep(1);
+  sleep(0.2);
 }
