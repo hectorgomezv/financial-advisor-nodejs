@@ -42,7 +42,6 @@ export default function run() {
     },
   };
 
-  const res = http.get(`${baseUrl}/companies`, params);
-  console.log(JSON.stringify(res));
+  http.get(`${baseUrl}/companies`, params);
   sleep(0.2);
 }
