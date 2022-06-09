@@ -11,11 +11,22 @@ const getLastByCompanyUuid = async companyUuid => collection.findOne(
   { sort: { timestamp: -1 }, limit: 1 },
 );
 
-// TODO: implement this using aggregation pipeline and use it in companies-service
-// const getLastStatesByCompanyUuids = async companyUuids => ...
+const getLastByCompanyUuids = async uuids => collection.aggregate([
+  { $match: { companyUuid: { $in: uuids } } },
+  { $group: { _id: '$companyUuid', state: { $last: '$$ROOT' } } },
+  {
+    $lookup: {
+      from: 'companies',
+      localField: '_id',
+      foreignField: 'uuid',
+      as: 'company',
+    },
+  },
+]).toArray();
 
 module.exports = {
   createCompanyState,
   getLastByCompanyUuid,
+  getLastByCompanyUuids,
   init,
 };
