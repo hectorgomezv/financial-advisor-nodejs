@@ -7,6 +7,7 @@ const init = app => {
       name: { type: 'string' },
       created: { type: 'number' },
       positions: { type: 'array', items: { $ref: 'positionSchema' } },
+      sumWeights: { type: 'number' },
       isValid: { type: 'boolean' },
     },
   });
