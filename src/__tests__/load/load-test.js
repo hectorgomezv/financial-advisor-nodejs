@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved, no-console, no-undef */
 
 import http from 'k6/http';
-import { sleep } from 'k6';
+import { check, sleep } from 'k6';
 
 const { EMAIL, PASSWORD } = __ENV;
 const baseUrl = 'https://financial-advisor.site/api/v1';
@@ -30,7 +30,6 @@ export function setup() {
 
   const { body } = http.post(loginUrl, payload, params);
   const bodyParsed = JSON.parse(body);
-  console.log(`saving ${bodyParsed.data.accessToken}`);
 
   return bodyParsed.data.accessToken;
 }
@@ -43,6 +42,11 @@ export default function run(accessToken) {
     },
   };
 
-  http.get(`${baseUrl}/companies`, params);
+  const res = http.get(`${baseUrl}/companies`, params);
+
+  check(res, {
+    'is status 200': r => r.status === 200,
+  });
+
   sleep(0.2);
 }
