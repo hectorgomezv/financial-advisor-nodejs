@@ -68,6 +68,8 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   fa-mongo:
     image: mongo:5-focal
