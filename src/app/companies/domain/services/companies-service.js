@@ -76,15 +76,9 @@ const findByUuid = async uuid => {
 };
 
 const getCompaniesWithLastState = async uuids => {
-  const companies = await CompaniesRepository.findByUuidIn(uuids);
+  const companiesWithLastState = await CompanyStatesRepository.getLastByCompanyUuids(uuids);
 
-  const states = await Promise.all(companies
-    .map(c => CompanyStatesRepository.getLastByCompanyUuid(c.uuid)));
-
-  return companies.map(company => ({
-    ...company,
-    state: { ...states.find(s => s.companyUuid === company.uuid) },
-  }));
+  return companiesWithLastState.map(s => ({ ...s.company[0], state: s.state }));
 };
 
 const getAll = () => CompaniesRepository.find();

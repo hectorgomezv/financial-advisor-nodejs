@@ -7,7 +7,13 @@ module.exports = async (context, uuid) => {
 
   const portfolio = await PortfoliosService.getPortfolioByUuidAndOwnerId(uuid, ownerId);
   const positions = await PositionsService.getPositionsByPortfolioUuid(uuid);
-  const isValid = (positions.reduce((acc, pos) => acc + pos.targetWeight, 0) === 100);
+  const sumWeights = positions.reduce((acc, pos) => acc + pos.targetWeight, 0);
+  const isValid = (sumWeights === 100);
 
-  return { ...portfolio, positions, isValid };
+  return {
+    ...portfolio,
+    positions,
+    sumWeights,
+    isValid,
+  };
 };
