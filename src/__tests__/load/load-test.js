@@ -12,7 +12,6 @@ export const options = {
 };
 
 export function setup() {
-  console.log('executing setup()');
   const loginUrl = `${baseUrl}/auth/accounts/login`;
 
   const params = {
