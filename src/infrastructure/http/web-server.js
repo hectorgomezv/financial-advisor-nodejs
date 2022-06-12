@@ -1,8 +1,10 @@
 const fastify = require('fastify');
 const cors = require('@fastify/cors');
+
 const logger = require('../logger');
-const healthRouter = require('../../app/health/adapters/http/routes/health-router');
 const companiesRouter = require('../../app/companies/adapters/http/routes/companies-router');
+const healthRouter = require('../../app/health/adapters/http/routes/health-router');
+const metricsRouter = require('../../app/metrics/adapters/http/routes/metrics-router');
 const portfoliosRouter = require('../../app/portfolios/adapters/http/routes/portfolios-router');
 
 const { CORS_BASE_URL } = process.env;
@@ -23,6 +25,7 @@ app.register(cors, {
 
 companiesRouter(app);
 healthRouter(app);
+metricsRouter(app);
 portfoliosRouter(app);
 
 const listen = port => {
