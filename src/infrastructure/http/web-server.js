@@ -1,5 +1,6 @@
 const fastify = require('fastify');
 const cors = require('@fastify/cors');
+const metricsPlugin = require('fastify-metrics');
 
 const logger = require('../logger');
 const companiesRouter = require('../../app/companies/adapters/http/routes/companies-router');
@@ -19,9 +20,8 @@ const getAllowedOrigins = () => {
     : allowedOrigins;
 };
 
-app.register(cors, {
-  origin: getAllowedOrigins(),
-});
+app.register(cors, { origin: getAllowedOrigins() });
+app.register(metricsPlugin, { endpoint: '/api/v1/fastify-metrics' });
 
 companiesRouter(app);
 healthRouter(app);
