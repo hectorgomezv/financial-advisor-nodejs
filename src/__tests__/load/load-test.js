@@ -7,8 +7,8 @@ const { EMAIL, PASSWORD } = __ENV;
 const baseUrl = 'https://financial-advisor.site/api/v1';
 
 export const options = {
-  vus: 20,
-  duration: '300s',
+  vus: 150,
+  duration: '100s',
 };
 
 export function setup() {
@@ -47,5 +47,5 @@ export default function run(accessToken) {
     'is status 200': r => r.status === 200,
   });
 
-  sleep(0.2);
+  sleep(0.02);
 }

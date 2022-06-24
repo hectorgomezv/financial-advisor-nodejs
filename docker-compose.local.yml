@@ -1,0 +1,82 @@
+version: '3'
+services:
+  financial-advisor-nodejs:
+    build: .
+    container_name: financial-advisor-nodejs
+    ports:
+      - "5100:5100"
+    environment:
+      - CORS_BASE_URL=${FINANCIAL_ADVISOR_CORS_BASE_URL}
+      - HTTP_SERVER_PORT=${FINANCIAL_ADVISOR_HTTP_SERVER_PORT}
+      - JWT_SECRET=${FINANCIAL_ADVISOR_JWT_SECRET}
+      - MONGO_CONNECTION_STRING=${FINANCIAL_ADVISOR_MONGO_CONNECTION_STRING}
+      - MONGO_DATABASE_NAME=${FINANCIAL_ADVISOR_MONGO_DATABASE_NAME}
+      - NEW_RELIC_APP_NAME=${FINANCIAL_ADVISOR_NEW_RELIC_APP_NAME}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - PROVIDER_API_TOKEN=${FINANCIAL_ADVISOR_PROVIDER_API_TOKEN}
+      - PROVIDER_BASE_URL=${FINANCIAL_ADVISOR_PROVIDER_BASE_URL}
+    links:
+      - fa-mongo
+    depends_on:
+      - fa-mongo
+
+  fa-auth-service:
+    image: "hectorgomezv1/auth-service:${FA_AUTH_SERVICE_IMAGE_RELEASE}"
+    ports:
+      - "4200:4200"
+    environment:
+      - ACTIVATION_CODE_EXPIRATION=${FA_AUTH_SERVICE_ACTIVATION_CODE_EXPIRATION}
+      - BASE_EMAIL=${FA_AUTH_SERVICE_BASE_EMAIL}
+      - BASE_URL=${FA_AUTH_SERVICE_BASE_URL}
+      - CORS_BASE_URL=${FA_AUTH_SERVICE_CORS_BASE_URL}
+      - FA_AUTH_SERVICE_IMAGE_RELEASE=${FA_AUTH_SERVICE_IMAGE_RELEASE}
+      - JWT_SECRET=${FA_AUTH_SERVICE_JWT_SECRET}
+      - MONGO_CONNECTION_STRING=${FA_AUTH_SERVICE_MONGO_CONNECTION_STRING}
+      - MONGO_DATABASE_NAME=${FA_AUTH_SERVICE_MONGO_DATABASE_NAME}
+      - PORT=${FA_AUTH_SERVICE_PORT}
+      - REFRESH_TOKEN_EXPIRATION=${FA_AUTH_SERVICE_REFRESH_TOKEN_EXPIRATION}
+      - RESET_PASSWORD_CODE_EXPIRATION=${FA_AUTH_SERVICE_RESET_PASSWORD_CODE_EXPIRATION}
+      - SENDGRID_API_KEY=${FA_AUTH_SERVICE_SENDGRID_API_KEY}
+      - SUPERADMIN_EMAIL=${FA_AUTH_SERVICE_SUPERADMIN_EMAIL}
+      - SUPERADMIN_PASSWORD=${FA_AUTH_SERVICE_SUPERADMIN_PASSWORD}
+      - TOKEN_EXPIRATION=${FA_AUTH_SERVICE_TOKEN_EXPIRATION}
+    links:
+      - fa-mongo
+    depends_on:
+      - fa-mongo
+
+  fa-frontend:
+    build: ../fa-frontend
+    ports:
+      - "9000:9000"
+    links:
+      - financial-advisor-nodejs
+    depends_on:
+      - financial-advisor-nodejs
+
+  fa-nginx: 
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - financial-advisor-nodejs
+      - fa-auth-service
+    depends_on:
+      - financial-advisor-nodejs
+      - fa-auth-service
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  fa-mongo:
+    image: mongo:5-focal
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
