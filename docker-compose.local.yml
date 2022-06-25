@@ -21,7 +21,7 @@ services:
       - fa-mongo
 
   fa-auth-service:
-    image: "hectorgomezv1/auth-service:${FA_AUTH_SERVICE_IMAGE_RELEASE}"
+    build: ../auth-service
     ports:
       - "4200:4200"
     environment:
@@ -29,7 +29,6 @@ services:
       - BASE_EMAIL=${FA_AUTH_SERVICE_BASE_EMAIL}
       - BASE_URL=${FA_AUTH_SERVICE_BASE_URL}
       - CORS_BASE_URL=${FA_AUTH_SERVICE_CORS_BASE_URL}
-      - FA_AUTH_SERVICE_IMAGE_RELEASE=${FA_AUTH_SERVICE_IMAGE_RELEASE}
       - JWT_SECRET=${FA_AUTH_SERVICE_JWT_SECRET}
       - MONGO_CONNECTION_STRING=${FA_AUTH_SERVICE_MONGO_CONNECTION_STRING}
       - MONGO_DATABASE_NAME=${FA_AUTH_SERVICE_MONGO_DATABASE_NAME}
@@ -53,6 +52,11 @@ services:
       - financial-advisor-nodejs
     depends_on:
       - financial-advisor-nodejs
+
+  fa-echo-server:
+    build: ../fa-echo-server
+    ports:
+      - "4000:4000"
 
   fa-nginx: 
     build: ./docker/nginx
@@ -78,5 +82,14 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  fa-redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass changeThis
+    volumes:
+      - redis_data:/data
+
 volumes:
   mongo_data:
+  redis_data:

@@ -1,18 +1,19 @@
 /* eslint-disable import/no-unresolved, no-console, no-undef */
 
 import http from 'k6/http';
-import { check, sleep } from 'k6';
+import { check } from 'k6';
 
 const { EMAIL, PASSWORD } = __ENV;
-const baseUrl = 'https://financial-advisor.site/api/v1';
+const baseUrl = 'http://localhost:5100/api/v1';
+const authBaseUrl = 'http://localhost:4200/api/v1';
 
 export const options = {
-  vus: 150,
-  duration: '100s',
+  vus: 400,
+  duration: '60s',
 };
 
 export function setup() {
-  const loginUrl = `${baseUrl}/auth/accounts/login`;
+  const loginUrl = `${authBaseUrl}/auth/accounts/login`;
 
   const params = {
     headers: {
@@ -46,6 +47,4 @@ export default function run(accessToken) {
   check(res, {
     'is status 200': r => r.status === 200,
   });
-
-  sleep(0.02);
 }
