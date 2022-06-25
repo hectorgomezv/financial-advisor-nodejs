@@ -8,7 +8,7 @@ const baseUrl = 'http://localhost:5100/api/v1';
 const authBaseUrl = 'http://localhost:4200/api/v1';
 
 export const options = {
-  vus: 400,
+  vus: 200,
   duration: '60s',
 };
 

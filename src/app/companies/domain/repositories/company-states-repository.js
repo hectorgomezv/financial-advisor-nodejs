@@ -6,7 +6,13 @@ const init = async (cacheInstance, db) => {
   cache = cacheInstance;
 };
 
-const createCompanyState = data => collection.insertOne(data);
+const LAST_STATES_CACHE_KEY = 'lastStates';
+
+const createCompanyState = async data => {
+  await cache.del(LAST_STATES_CACHE_KEY);
+
+  return collection.insertOne(data);
+};
 
 const getLastByCompanyUuid = async companyUuid => collection.findOne(
   { companyUuid },
@@ -14,13 +20,13 @@ const getLastByCompanyUuid = async companyUuid => collection.findOne(
 );
 
 const getLastByCompanyUuids = async uuids => {
-  const isCached = await cache.exists('lastStates');
+  const copy = await cache.get(LAST_STATES_CACHE_KEY);
 
-  if (isCached) {
-    return cache.get('lastStates');
+  if (copy) {
+    return JSON.parse(copy);
   }
 
-  return collection.aggregate([
+  const result = await collection.aggregate([
     { $match: { companyUuid: { $in: uuids } } },
     { $group: { _id: '$companyUuid', state: { $last: '$$ROOT' } } },
     {
@@ -32,6 +38,10 @@ const getLastByCompanyUuids = async uuids => {
       },
     },
   ]).toArray();
+
+  await cache.set(LAST_STATES_CACHE_KEY, JSON.stringify(result));
+
+  return result;
 };
 
 module.exports = {
