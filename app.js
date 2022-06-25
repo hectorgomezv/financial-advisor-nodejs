@@ -2,7 +2,13 @@ require('dotenv').config();
 require('newrelic');
 const client = require('prom-client');
 
-const { http, logger, database } = require('./src/infrastructure');
+const {
+  cache,
+  database,
+  http,
+  logger,
+} = require('./src/infrastructure');
+
 const { RbacService } = require('./src/app/shared/domain/services');
 const { CompaniesRepository, CompanyStatesRepository } = require('./src/app/companies/domain/repositories');
 const { PortfoliosRepository, PositionsRepository } = require('./src/app/portfolios/domain/repositories');
@@ -20,8 +26,9 @@ collectDefaultMetrics({ register });
   try {
     await RbacService.init();
     const dbInstance = await database.getDb();
+    const cacheInstance = await cache.getCache();
     await CompaniesRepository.init(dbInstance);
-    await CompanyStatesRepository.init(dbInstance);
+    await CompanyStatesRepository.init(cacheInstance, dbInstance);
     await MetricsRepository.init(register);
     await PortfoliosRepository.init(dbInstance);
     await PositionsRepository.init(dbInstance);
