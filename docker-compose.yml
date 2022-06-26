@@ -80,6 +80,14 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  fa-redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+
   # README: https://www.programonaut.com/setup-ssl-with-docker-nginx-and-lets-encrypt/
   certbot:
     image: certbot/certbot
@@ -91,3 +99,4 @@ services:
 
 volumes:
   mongo_data:
+  redis_data:
