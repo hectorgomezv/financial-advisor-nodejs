@@ -9,6 +9,10 @@ const EVERY_HOUR_EXP = '0 * * * *';
 let fx;
 
 const refreshFx = () => new Promise((resolve, reject) => {
+  if (!EXCHANGE_RATES_PROVIDER_APP_ID) {
+    throw new Error('No EXCHANGE_RATES_PROVIDER_APP_ID provided');
+  }
+
   oxr.set({ app_id: EXCHANGE_RATES_PROVIDER_APP_ID });
 
   oxr.latest(err => {
