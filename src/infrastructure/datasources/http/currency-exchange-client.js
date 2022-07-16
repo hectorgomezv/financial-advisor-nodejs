@@ -24,14 +24,13 @@ const initFx = () => new Promise((resolve, reject) => {
 });
 
 const initDaemon = () => {
-  const daemon = new CronJob(EVERY_HOUR_EXP, () => initFx());
+  const daemon = new CronJob(EVERY_HOUR_EXP, () => { fx = initFx(); });
   daemon.start();
 };
 
 const getFx = async () => {
   if (!fx) {
-    const instance = await initFx();
-    fx = instance;
+    fx = await initFx();
     initDaemon();
   }
 
