@@ -9,6 +9,7 @@ const init = app => {
       positions: { type: 'array', items: { $ref: 'positionSchema' } },
       sumWeights: { type: 'number' },
       isValid: { type: 'boolean' },
+      totalValueEUR: { type: 'number' },
     },
   });
 };
