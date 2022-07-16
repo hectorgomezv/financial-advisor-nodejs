@@ -8,7 +8,7 @@ const EVERY_HOUR_EXP = '0 * * * *';
 
 let fx;
 
-const initFx = () => new Promise((resolve, reject) => {
+const refreshFx = () => new Promise((resolve, reject) => {
   oxr.set({ app_id: EXCHANGE_RATES_PROVIDER_APP_ID });
 
   oxr.latest(err => {
@@ -24,13 +24,16 @@ const initFx = () => new Promise((resolve, reject) => {
 });
 
 const initDaemon = () => {
-  const daemon = new CronJob(EVERY_HOUR_EXP, () => { fx = initFx(); });
+  const daemon = new CronJob(EVERY_HOUR_EXP, async () => {
+    fx = await refreshFx();
+  });
+
   daemon.start();
 };
 
 const getFx = async () => {
   if (!fx) {
-    fx = await initFx();
+    fx = await refreshFx();
     initDaemon();
   }
 
