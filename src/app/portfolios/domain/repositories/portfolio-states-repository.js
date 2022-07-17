@@ -5,6 +5,7 @@ const init = async db => {
 };
 
 const createPortfolioState = data => collection.insertOne(data);
+const deleteAllByPortfolioUuid = portfolioUuid => collection.deleteMany({ portfolioUuid });
 
 const getLastByPortfolioUuid = portfolioUuid => collection.findOne(
   { portfolioUuid },
@@ -13,6 +14,7 @@ const getLastByPortfolioUuid = portfolioUuid => collection.findOne(
 
 module.exports = {
   createPortfolioState,
+  deleteAllByPortfolioUuid,
   getLastByPortfolioUuid,
   init,
 };

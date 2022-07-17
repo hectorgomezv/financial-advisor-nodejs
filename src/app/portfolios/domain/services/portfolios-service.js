@@ -51,6 +51,7 @@ const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
 
 const deletePortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
   await getPortfolioByUuidAndOwnerId(uuid, ownerId);
+  await PortfolioStatesRepository.deleteAllByPortfolioUuid(uuid);
 
   return PortfoliosRepository.deleteByUuid(uuid);
 };
