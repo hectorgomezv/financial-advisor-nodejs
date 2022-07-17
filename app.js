@@ -11,9 +11,10 @@ const {
 
 const { RbacService } = require('./src/app/shared/domain/services');
 const { CompaniesRepository, CompanyStatesRepository } = require('./src/app/companies/domain/repositories');
-const { PortfoliosRepository, PositionsRepository } = require('./src/app/portfolios/domain/repositories');
+const { PortfoliosRepository, PositionsRepository, PortfolioStatesRepository } = require('./src/app/portfolios/domain/repositories');
 const { MetricsRepository } = require('./src/app/metrics/domain/repositories');
 const companiesTasks = require('./src/app/companies/domain/tasks');
+const portfoliosTasks = require('./src/app/portfolios/domain/tasks');
 
 const { HTTP_SERVER_PORT } = process.env;
 
@@ -31,9 +32,11 @@ collectDefaultMetrics({ register });
     await CompanyStatesRepository.init(cacheInstance, dbInstance);
     await MetricsRepository.init(register);
     await PortfoliosRepository.init(dbInstance);
+    await PortfolioStatesRepository.init(dbInstance);
     await PositionsRepository.init(dbInstance);
     await http.webServer.listen(HTTP_SERVER_PORT);
     companiesTasks.start();
+    portfoliosTasks.start();
   } catch (err) {
     logger.error(err);
     database.shutdown();

@@ -3,9 +3,8 @@ const { default: ValidationError } = require('ajv/dist/runtime/validation_error'
 
 const PositionsService = require('./positions-service');
 const { Portfolio } = require('../entities');
-const { PortfoliosRepository } = require('../repositories');
+const { PortfoliosRepository, PortfolioStatesRepository } = require('../repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
-const { getFx } = require('../../../../infrastructure/datasources/http/currency-exchange-client');
 
 const ajv = new Ajv();
 
@@ -18,13 +17,6 @@ const portfolioSchema = ajv.compile({
   additionalProperties: false,
 });
 
-const getTotalValueEUR = async positions => {
-  const fx = await getFx();
-  const totalValueUSD = positions.reduce((acc, pos) => acc + pos.value, 0);
-
-  return fx(totalValueUSD).from('USD').to('EUR');
-};
-
 const createPortfolio = async (data, ownerId) => {
   if (!portfolioSchema(data)) {
     throw new ValidationError(portfolioSchema.errors);
@@ -36,6 +28,8 @@ const createPortfolio = async (data, ownerId) => {
   return portfolio;
 };
 
+const getAll = () => PortfoliosRepository.findAll();
+
 const getPortfoliosByOwnerId = ownerId => PortfoliosRepository.findByOwnerId(ownerId);
 
 const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
@@ -46,18 +40,12 @@ const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
   }
 
   const positions = await PositionsService.getPositionsByPortfolioUuid(uuid);
-  const sumWeights = positions.reduce((acc, pos) => acc + pos.targetWeight, 0);
-  const isValid = (sumWeights === 100);
-  const totalValueEUR = await getTotalValueEUR(positions);
+  const state = await PortfolioStatesRepository.getLastByPortfolioUuid(uuid);
 
   return {
     ...portfolio,
     positions,
-    state: {
-      isValid,
-      sumWeights,
-      totalValueEUR,
-    },
+    state: state || {},
   };
 };
 
@@ -70,6 +58,7 @@ const deletePortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
 module.exports = {
   createPortfolio,
   deletePortfolioByUuidAndOwnerId,
+  getAll,
   getPortfoliosByOwnerId,
   getPortfolioByUuidAndOwnerId,
 };
