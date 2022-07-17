@@ -39,11 +39,7 @@ const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
 };
 
 const deletePortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
-  const portfolio = await PortfoliosRepository.findByUuidAndOwnerId(uuid, ownerId);
-
-  if (!portfolio) {
-    throw new NotFoundError(`Portfolio ${uuid} not found`);
-  }
+  await getPortfolioByUuidAndOwnerId(uuid, ownerId);
 
   return PortfoliosRepository.deleteByUuid(uuid);
 };
