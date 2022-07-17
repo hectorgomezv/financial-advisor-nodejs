@@ -1,15 +1,12 @@
-const { PositionsRepository } = require('../repositories');
-const { NotFoundError } = require('../../../shared/domain/errors');
+const { PortfoliosService, PortfolioStatesService, PositionsService } = require('../services');
 const { RbacService } = require('../../../shared/domain/services');
 
 module.exports = async (context, portfolioUuid, positionUuid) => {
+  const { auth: { id: ownerId } } = context;
   await RbacService.isUserAllowedTo(context, 'delete', 'portfolio');
-  // TODO: check the portfolio is owned by the user in the context
-  const position = await PositionsRepository.findByUuid(positionUuid);
 
-  if (!position) {
-    throw new NotFoundError(`Position ${positionUuid} not found`);
-  }
-
-  return PositionsRepository.deleteById(position._id);
+  await PortfoliosService.getPortfolioByUuidAndOwnerId(portfolioUuid, ownerId);
+  await PositionsService.deletePositionByPortfolioUuidAndUuid(portfolioUuid, positionUuid);
+  const positions = await PositionsService.getPositionsByPortfolioUuid(portfolioUuid);
+  await PortfolioStatesService.createPortfolioState(portfolioUuid, positions);
 };

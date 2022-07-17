@@ -9,9 +9,6 @@ const getTotalValueEUR = async positions => {
   return fx(totalValueUSD).from('USD').to('EUR');
 };
 
-const getLastByPortfolioUuid = portfolioUuid => PortfolioStatesRepository
-  .getLastByPortfolioUuid(portfolioUuid);
-
 const createPortfolioState = async (portfolioUuid, positions) => {
   const sumWeights = positions.reduce((acc, pos) => acc + pos.targetWeight, 0);
   const isValid = (sumWeights === 100);
@@ -21,7 +18,14 @@ const createPortfolioState = async (portfolioUuid, positions) => {
   return PortfolioStatesRepository.createPortfolioState(portfolioState);
 };
 
+const deleteAllByPortfolioUuid = portfolioUuid => PortfolioStatesRepository
+  .deleteAllByPortfolioUuid(portfolioUuid);
+
+const getLastByPortfolioUuid = portfolioUuid => PortfolioStatesRepository
+  .getLastByPortfolioUuid(portfolioUuid);
+
 module.exports = {
   createPortfolioState,
+  deleteAllByPortfolioUuid,
   getLastByPortfolioUuid,
 };

@@ -3,7 +3,7 @@ const { range } = require('lodash/fp');
 const matchers = require('jest-extended');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
-const { PositionsService } = require('../../../../../app/portfolios/domain/services');
+const { PositionsService, PortfolioStatesService } = require('../../../../../app/portfolios/domain/services');
 const { PortfoliosRepository, PositionsRepository } = require('../../../../../app/portfolios/domain/repositories');
 const { CompaniesRepository, CompanyStatesRepository } = require('../../../../../app/companies/domain/repositories');
 const { Company, CompanyState } = require('../../../../../app/companies/domain/entities');
@@ -43,6 +43,9 @@ describe('[unit tests] [positions-service]', () => {
     beforeEach(() => {
       PortfoliosRepository.findByUuid = jest.fn().mockReturnValue(PORTFOLIO);
       CompaniesRepository.findBySymbol = jest.fn().mockReturnValue(COMPANY);
+      CompaniesRepository.findByUuidIn = jest.fn().mockReturnValue(COMPANY);
+      PortfolioStatesService.createPortfolioState = jest.fn();
+      PositionsRepository.findByPortfolioUuid = jest.fn(() => []);
       PositionsRepository.findByCompanyUuidAndPortfolioUuid = jest.fn()
         .mockReturnValue(CURRENT_POSITIONS);
     });

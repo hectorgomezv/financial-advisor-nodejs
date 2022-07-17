@@ -5,7 +5,7 @@ const init = async db => {
 };
 
 const createPosition = position => collection.insertOne(position);
-const deleteById = id => collection.deleteOne({ _id: id });
+const deleteByUuid = uuid => collection.deleteOne({ uuid });
 const deleteByPortfolioUuid = portfolioUuid => collection.deleteMany({ portfolioUuid });
 const find = async () => collection.find({}).toArray();
 const findByCompanyUuid = companyUuid => collection.find({ companyUuid }).toArray();
@@ -14,17 +14,22 @@ const findByCompanyUuidAndPortfolioUuid = (companyUuid, portfolioUuid) => collec
   .find({ companyUuid, portfolioUuid }).toArray();
 
 const findByPortfolioUuid = portfolioUuid => collection.find({ portfolioUuid }).toArray();
+
+const findByPortfolioUuidAndUuid = (portfolioUuid, uuid) => collection
+  .findOne({ portfolioUuid, uuid });
+
 const findByUuid = uuid => collection.findOne({ uuid });
 const updatePosition = (uuid, patch) => collection.updateOne({ uuid }, { $set: patch });
 
 module.exports = {
   createPosition,
-  deleteById,
+  deleteByUuid,
   deleteByPortfolioUuid,
   find,
   findByCompanyUuid,
   findByCompanyUuidAndPortfolioUuid,
   findByPortfolioUuid,
+  findByPortfolioUuidAndUuid,
   findByUuid,
   init,
   updatePosition,
