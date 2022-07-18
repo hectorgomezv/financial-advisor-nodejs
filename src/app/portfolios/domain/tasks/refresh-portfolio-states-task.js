@@ -3,6 +3,7 @@ const { PortfoliosService, PortfolioStatesService, PositionsService } = require(
 
 const TEN_SECONDS_MS = 10 * 1000;
 const MARKET_OPEN_CRON_EXP = '0 34 15 * * *';
+const MIDDAY_CRON_EXP = '0 32 18 * * *';
 const MARKET_CLOSE_CRON_EXP = '0 04 22 * * *';
 
 const refreshPortfolioStates = async () => {
@@ -17,12 +18,9 @@ const refreshPortfolioStates = async () => {
 const run = () => {
   setTimeout(() => refreshPortfolioStates(), TEN_SECONDS_MS);
 
-  const jobs = [
-    new CronJob(MARKET_OPEN_CRON_EXP, () => refreshPortfolioStates(), null, false, 'Europe/Madrid'),
-    new CronJob(MARKET_CLOSE_CRON_EXP, () => refreshPortfolioStates(), null, false, 'Europe/Madrid'),
-  ];
-
-  jobs.map(j => j.start());
+  [MARKET_OPEN_CRON_EXP, MIDDAY_CRON_EXP, MARKET_CLOSE_CRON_EXP]
+    .map(exp => new CronJob(exp, () => refreshPortfolioStates(), null, false, 'Europe/Madrid'))
+    .map(job => job.start());
 };
 
 module.exports = { run };
