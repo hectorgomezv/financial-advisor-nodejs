@@ -1,5 +1,5 @@
 const PortfoliosController = require('../controllers/portfolios-controller');
-const { portfolioSerializer, positionSerializer } = require('../serializers');
+const { portfolioSerializer, portfolioMetricSerializer, positionSerializer } = require('../serializers');
 const { authDecorator } = require('../../../../shared/adapters/http/middleware');
 
 const BASE_URL = '/api/v1/portfolios';
@@ -7,6 +7,7 @@ const BASE_URL = '/api/v1/portfolios';
 const portfoliosRouter = app => {
   positionSerializer.init(app);
   portfolioSerializer.init(app);
+  portfolioMetricSerializer.init(app);
 
   app.route({
     method: 'GET',
@@ -32,6 +33,21 @@ const portfoliosRouter = app => {
       response: {
         200: {
           $ref: 'portfolioSchema',
+        },
+      },
+    },
+  });
+
+  app.route({
+    method: 'GET',
+    url: `${BASE_URL}/:uuid/metrics`,
+    preValidation: authDecorator.addAuthHeader,
+    handler: PortfoliosController.getPortfolioMetricsCtl,
+    schema: {
+      response: {
+        200: {
+          type: 'array',
+          items: { $ref: 'portfolioMetricSchema' },
         },
       },
     },

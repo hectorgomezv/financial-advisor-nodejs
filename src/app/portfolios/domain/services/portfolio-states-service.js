@@ -24,8 +24,48 @@ const deleteAllByPortfolioUuid = portfolioUuid => PortfolioStatesRepository
 const getLastByPortfolioUuid = portfolioUuid => PortfolioStatesRepository
   .getLastByPortfolioUuid(portfolioUuid);
 
+// TODO: move this to portfolio-states-repository
+
+const getSeriesForMonth = portfolioUuid => {
+  const pipeline = [
+    { $match: { portfolioUuid: '3d78a8d8-3c49-4dc1-af81-b32863a5f60e' } },
+    { $addFields: { parsedDate: { $toDate: '$timestamp' } } },
+    {
+      $group: {
+        _id: {
+          year: { $year: '$parsedDate' },
+          day: { $dayOfYear: '$parsedDate' },
+        },
+        average: { $avg: '$totalValueEUR' },
+      },
+    },
+    { $sort: { '_id.year': 1, '_id.day': 1 } }];
+
+  return 'unimplemented';
+};
+
+const getSeriesForYear = portfolioUuid => {
+  const pipeline = [
+    { $match: { portfolioUuid: '3d78a8d8-3c49-4dc1-af81-b32863a5f60e' } },
+    { $addFields: { parsedDate: { $toDate: '$timestamp' } } },
+    {
+      $group: {
+        _id: {
+          year: { $year: '$parsedDate' },
+          week: { $week: '$parsedDate' },
+        },
+        average: { $avg: '$totalValueEUR' },
+      },
+    },
+    { $sort: { '_id.year': 1, '_id.week': 1 } }];
+
+  return 'unimplemented';
+};
+
 module.exports = {
   createPortfolioState,
   deleteAllByPortfolioUuid,
   getLastByPortfolioUuid,
+  getSeriesForMonth,
+  getSeriesForYear,
 };
