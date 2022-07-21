@@ -7,6 +7,7 @@ const {
   deletePortfolio,
   getPortfolios,
   getPortfolio,
+  getPortfolioMetrics,
   updatePosition,
 } = require('../../../domain/use-cases');
 
@@ -18,6 +19,18 @@ const getPortfolioCtl = async (req, res) => {
     const { uuid } = req.params;
     const portfolio = await getPortfolio(context, uuid);
     res.send(portfolio);
+  } catch (err) {
+    const error = mapError(err);
+    res.code(error.status).send(error);
+  }
+};
+
+const getPortfolioMetricsCtl = async (req, res) => {
+  try {
+    const { context, query: { range } } = req;
+    const { uuid } = req.params;
+    const portfolioMetrics = await getPortfolioMetrics(context, uuid, range);
+    res.send(portfolioMetrics);
   } catch (err) {
     const error = mapError(err);
     res.code(error.status).send(error);
@@ -98,6 +111,7 @@ module.exports = {
   deletePortfolioCtl,
   deletePositionCtl,
   getPortfolioCtl,
+  getPortfolioMetricsCtl,
   getPortfoliosCtl,
   updatePositionCtl,
 };

@@ -1,6 +1,7 @@
 const Ajv = require('ajv');
 const { default: ValidationError } = require('ajv/dist/runtime/validation_error');
 
+const PortfolioStatesService = require('./portfolio-states-service');
 const { Position } = require('../entities');
 const { PositionsRepository, PortfoliosRepository } = require('../repositories');
 const { InvalidPositionError } = require('../errors');
@@ -42,6 +43,25 @@ const addWeights = positionsStates => {
   });
 };
 
+async function getPositionsByPortfolioUuid(portfolioUuid) {
+  const positions = await PositionsRepository.findByPortfolioUuid(portfolioUuid);
+  const companies = await CompaniesRepository.findByUuidIn(positions.map(p => p.companyUuid));
+
+  const positionStates = await Promise.all(positions.map(async position => {
+    const company = companies.find(c => (c.uuid === position.companyUuid));
+
+    if (!company) {
+      throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
+    }
+
+    const companyState = await CompanyStatesRepository.getLastByCompanyUuid(company.uuid);
+
+    return calculatePositionState(position, company, companyState);
+  }));
+
+  return addWeights(positionStates).sort((a, b) => a.value - b.value).reverse();
+}
+
 async function createPosition(portfolioUuid, data) {
   if (!positionSchema(data)) {
     throw new ValidationError(positionSchema.errors);
@@ -70,30 +90,26 @@ async function createPosition(portfolioUuid, data) {
   }
 
   await PositionsRepository.createPosition(position);
+  const positions = await getPositionsByPortfolioUuid(portfolioUuid);
+  await PortfolioStatesService.createPortfolioState(portfolioUuid, positions);
 
   return position;
 }
 
-async function getPositionsByPortfolioUuid(portfolioUuid) {
-  const positions = await PositionsRepository.findByPortfolioUuid(portfolioUuid);
-  const companies = await CompaniesRepository.findByUuidIn(positions.map(p => p.companyUuid));
+async function deletePositionByPortfolioUuidAndUuid(portfolioUuid, positionUuid) {
+  const position = await PositionsRepository
+    .findByPortfolioUuidAndUuid(portfolioUuid, positionUuid);
 
-  const positionStates = await Promise.all(positions.map(async position => {
-    const company = companies.find(c => (c.uuid === position.companyUuid));
+  if (!position) {
+    throw new NotFoundError(`Position ${positionUuid} not found`);
+  }
 
-    if (!company) {
-      throw new InvalidPositionError(`Invalid company for position: ${position.uuid}`);
-    }
-
-    const companyState = await CompanyStatesRepository.getLastByCompanyUuid(company.uuid);
-
-    return calculatePositionState(position, company, companyState);
-  }));
-
-  return addWeights(positionStates).sort((a, b) => a.value - b.value).reverse();
+  return PositionsRepository.deleteByUuid(positionUuid);
 }
 
 async function deletePositionsByPortfolioUuid(portfolioUuid) {
+  await PortfolioStatesService.deleteAllByPortfolioUuid(portfolioUuid);
+
   return PositionsRepository.deleteByPortfolioUuid(portfolioUuid);
 }
 
@@ -125,11 +141,16 @@ async function updatePosition(portfolioUuid, data) {
     symbol: company.symbol,
   });
 
-  return PositionsRepository.findByUuid(currentPosition.uuid);
+  const updated = await PositionsRepository.findByUuid(currentPosition.uuid);
+  const positions = await getPositionsByPortfolioUuid(portfolioUuid);
+  await PortfolioStatesService.createPortfolioState(portfolioUuid, positions);
+
+  return updated;
 }
 
 module.exports = {
   createPosition,
+  deletePositionByPortfolioUuidAndUuid,
   deletePositionsByPortfolioUuid,
   getPositionsByPortfolioUuid,
   updatePosition,
