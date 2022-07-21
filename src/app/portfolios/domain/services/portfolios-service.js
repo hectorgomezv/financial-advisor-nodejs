@@ -3,7 +3,7 @@ const { default: ValidationError } = require('ajv/dist/runtime/validation_error'
 
 const PositionsService = require('./positions-service');
 const { Portfolio } = require('../entities');
-const { PortfolioMetricsMapper } = require('./mappers');
+const { PortfolioMetricsMapper, TimeRangeMapper } = require('./mappers');
 const { PortfoliosRepository, PortfolioStatesRepository } = require('../repositories');
 const { NotFoundError } = require('../../../shared/domain/errors');
 
@@ -50,14 +50,15 @@ const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
   };
 };
 
-const getPortfolioMetricsByUuidAndOwnerId = async (uuid, ownerId) => {
+const getPortfolioMetricsByUuidAndOwnerId = async (uuid, ownerId, rangeStr) => {
   const portfolio = await PortfoliosRepository.findByUuidAndOwnerId(uuid, ownerId);
 
   if (!portfolio) {
     throw new NotFoundError(`Portfolio ${uuid} not found`);
   }
 
-  const series = await PortfolioStatesRepository.getSeriesForWeek(uuid);
+  const range = TimeRangeMapper.from(rangeStr);
+  const series = await PortfolioStatesRepository.getSeriesForRange(uuid, range);
 
   return series.map(s => PortfolioMetricsMapper.from(s));
 };

@@ -1,23 +1,43 @@
+const { MONTH, YEAR } = require('../services/mappers/time-range-mapper');
+
 let collection;
 
 const init = async db => {
   collection = db.collection('portfolioStates');
 };
 
+const getGroupingForRange = range => {
+  if (range === YEAR) {
+    return {
+      year: { $year: '$parsedDate' },
+      week: { $week: '$parsedDate' },
+    };
+  }
+
+  if (range === MONTH) {
+    return {
+      year: { $year: '$parsedDate' },
+      day: { $dayOfYear: '$parsedDate' },
+    };
+  }
+
+  return {
+    year: { $year: '$parsedDate' },
+    day: { $dayOfYear: '$parsedDate' },
+    hour: { $hour: '$parsedDate' },
+  };
+};
+
 const createPortfolioState = data => collection.insertOne(data);
 const deleteAllByPortfolioUuid = portfolioUuid => collection.deleteMany({ portfolioUuid });
 
-const getSeriesForWeek = portfolioUuid => {
+const getSeriesForRange = (portfolioUuid, range) => {
   const pipeline = [
     { $match: { portfolioUuid } },
     { $addFields: { parsedDate: { $toDate: '$timestamp' } } },
     {
       $group: {
-        _id: {
-          year: { $year: '$parsedDate' },
-          day: { $dayOfYear: '$parsedDate' },
-          hour: { $hour: '$parsedDate' },
-        },
+        _id: getGroupingForRange(range),
         average: { $avg: '$totalValueEUR' },
       },
     },
@@ -34,7 +54,7 @@ const getLastByPortfolioUuid = portfolioUuid => collection.findOne(
 module.exports = {
   createPortfolioState,
   deleteAllByPortfolioUuid,
-  getSeriesForWeek,
+  getSeriesForRange,
   getLastByPortfolioUuid,
   init,
 };

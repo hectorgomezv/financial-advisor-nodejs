@@ -27,9 +27,9 @@ const getPortfolioCtl = async (req, res) => {
 
 const getPortfolioMetricsCtl = async (req, res) => {
   try {
-    const { context } = req;
+    const { context, query: { range } } = req;
     const { uuid } = req.params;
-    const portfolioMetrics = await getPortfolioMetrics(context, uuid);
+    const portfolioMetrics = await getPortfolioMetrics(context, uuid, range);
     res.send(portfolioMetrics);
   } catch (err) {
     const error = mapError(err);
