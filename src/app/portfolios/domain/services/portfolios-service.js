@@ -18,6 +18,12 @@ const portfolioSchema = ajv.compile({
   additionalProperties: false,
 });
 
+/**
+ * Creates a new portfolio
+ * @param {Object} data input
+ * @param {String} ownerId
+ * @returns {Portfolio} created
+ */
 const createPortfolio = async (data, ownerId) => {
   if (!portfolioSchema(data)) {
     throw new ValidationError(portfolioSchema.errors);
@@ -29,10 +35,26 @@ const createPortfolio = async (data, ownerId) => {
   return portfolio;
 };
 
+/**
+ * Finds all portfolios
+ * @returns {Portfolio[]}
+ */
 const getAll = () => PortfoliosRepository.findAll();
 
+/**
+ * Finds all portfolios by ownerId
+ * @param {String} ownerId
+ * @returns {Portfolio[]}
+ */
 const getPortfoliosByOwnerId = ownerId => PortfoliosRepository.findByOwnerId(ownerId);
 
+/**
+ * Finds a portfolio by uuid and ownerId. Decorates the portfolio
+ * with associated positions and last state.
+ * @param {String} uuid
+ * @param {String} ownerId
+ * @returns {Portfolio} with positions and state
+ */
 const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
   const portfolio = await PortfoliosRepository.findByUuidAndOwnerId(uuid, ownerId);
 
@@ -50,6 +72,13 @@ const getPortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
   };
 };
 
+/**
+ * Returns an array of PortfolioMetric with values within the range passed.
+ * @param {String} uuid
+ * @param {String} ownerId
+ * @param {String} rangeStr string representing the range for the computation
+ * @returns {PortfolioMetric[]}
+ */
 const getPortfolioMetricsByUuidAndOwnerId = async (uuid, ownerId, rangeStr) => {
   const portfolio = await PortfoliosRepository.findByUuidAndOwnerId(uuid, ownerId);
 
@@ -60,9 +89,15 @@ const getPortfolioMetricsByUuidAndOwnerId = async (uuid, ownerId, rangeStr) => {
   const range = TimeRangeMapper.from(rangeStr);
   const series = await PortfolioStatesRepository.getSeriesForRange(uuid, range);
 
-  return series.map(s => PortfolioMetricsMapper.from(s));
+  return series.filter(s => s.average).map(s => PortfolioMetricsMapper.from(s));
 };
 
+/**
+ * Deletes a portfolio
+ * @param {String} uuid
+ * @param {String} ownerId
+ * @returns null
+ */
 const deletePortfolioByUuidAndOwnerId = async (uuid, ownerId) => {
   await getPortfolioByUuidAndOwnerId(uuid, ownerId);
   await PortfolioStatesRepository.deleteAllByPortfolioUuid(uuid);
