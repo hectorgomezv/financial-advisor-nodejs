@@ -4,7 +4,7 @@ const oxr = require('open-exchange-rates');
 
 const { EXCHANGE_RATES_PROVIDER_APP_ID } = process.env;
 
-const EVERY_TWELVE_HOURS_CRON_EXP = '0 */12 * * *';
+const EVERY_THREE_HOURS_CRON_EXP = '0 */3 * * *';
 
 let fx;
 
@@ -28,7 +28,7 @@ const refreshFx = () => new Promise((resolve, reject) => {
 });
 
 const initDaemon = () => {
-  const daemon = new CronJob(EVERY_TWELVE_HOURS_CRON_EXP, async () => {
+  const daemon = new CronJob(EVERY_THREE_HOURS_CRON_EXP, async () => {
     fx = await refreshFx();
   });
 
