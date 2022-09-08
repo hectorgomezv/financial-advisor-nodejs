@@ -28,12 +28,24 @@ const getGroupingForRange = range => {
   };
 };
 
+const getRangeStartTimestamp = range => {
+  if (range === YEAR) {
+    return Date.now() - (365 * 24 * 60 * 60 * 1000);
+  }
+
+  if (range === MONTH) {
+    return Date.now() - (30 * 24 * 60 * 60 * 1000);
+  }
+
+  return Date.now() - (7 * 24 * 60 * 60 * 1000);
+};
+
 const createPortfolioState = data => collection.insertOne(data);
 const deleteAllByPortfolioUuid = portfolioUuid => collection.deleteMany({ portfolioUuid });
 
 const getSeriesForRange = (portfolioUuid, range) => {
   const pipeline = [
-    { $match: { portfolioUuid } },
+    { $match: { portfolioUuid, timestamp: { $gte: getRangeStartTimestamp(range) } } },
     { $addFields: { parsedDate: { $toDate: '$timestamp' } } },
     {
       $group: {
